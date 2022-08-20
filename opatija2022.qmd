@@ -1,5 +1,9 @@
 ---
 title: "opatija2022"
+author:
+  - name: Josip Tica
+    orcid: https://orcid.org/0000-0001-7937-1573
+format: docx
 ---
 
 ## Quarto
