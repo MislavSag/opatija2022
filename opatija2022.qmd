@@ -11,5 +11,193 @@ format: docx
 Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
 
 ```{r}
-1 + 1
+#| warning: false
+
+# install packages if not already installed
+if (!is.element("DBI", installed.packages()[,1])) 
+  install.packages(p, dep = TRUE)
+if (!is.element("RMySQL", installed.packages()[,1])) 
+  install.packages(p, dep = TRUE)
+if (!is.element("data.table", installed.packages()[,1])) 
+  install.packages(p, dep = TRUE)
+if (!is.element("ggplot2", installed.packages()[,1])) 
+  install.packages(p, dep = TRUE)
+
+# import packages
+library(DBI)        # paket za povezivanje s bazom podataka
+library(RMySQL)     # paket za povezivanje s RMySQL bazom podataka  
+library(data.table) # data wrangling
+library(ggplot2)    # vizualizacija
+```
+
+```{r}
+# pomocna funkcija za povezivanje s GFI MySQL bazom podataka
+gfiConnect <- function() {
+  db <- dbConnect(MySQL(), dbname = "odvjet12_gfi",
+                  host = "91.234.46.219",
+                  port = 3306L,
+                  user = "odvjet12_mislav",
+                  password = "Contentio0207")
+  return(db)
+}
+
+# pomocna funkcija za slanje queya na GFI bazu podataka
+gfiSelect <- function(query) {
+  db <- gfiConnect()
+  dbSendQuery(db, 'set character set "utf8"')
+  dbSendQuery(db, 'SET NAMES utf8')
+  data <- dbGetQuery(db, query)
+  dbDisconnect(db)
+  return(data)
+}
+```
+
+```{r}
+# preuzimanje podataka za sektor programiranja i turistički sektor
+q <- sprintf("SELECT b335/1000000000 AS Export,
+                     b370/1000000000 AS Import,
+                     b372 AS Zaposleni,
+                     b266/1000000000 AS Software,
+                     b249/1000000000 AS Razvoj,
+                     b250/1000000000 AS Tech, 
+                     b004/1000000000 AS Razvoj1,
+                     b005/1000000000 AS Tech1,
+                     b003/1000000000 AS Nematerijalna,
+                     b110/1000000000 AS Prihod,
+                     b120/1000000000 AS Placa,
+                     b147/1000000000 AS Nett,
+                     b329/1000000000 AS Grants,
+                     reportyear, subjectid, employeecounteop, foreigncontrol,
+                     nacerev21, nacerev22, nacerev23, nacerev24
+                FROM gfi_all 
+                WHERE reportyear >= 2000 AND nacerev21 IN ('J', 'I', 'C');")
+gfi <- gfiSelect(q)       # preuzimanje podataka
+gfi <- as.data.table(gfi) # koristenje data.table paketa za data.wangling
+gfi$nacerev22 <- as.character(gfi$nacerev22)
+
+# sifrarnici
+nkd <- read.csv2("data/cb_reg_activity_translations.csv")
+nkd <- nkd[, c("ActivityID", "ActivityName_.HRV.")]
+```
+
+```{r}
+# agregacija za sektor J i I data.table WAY
+gfi_sample <- gfi[, .(subjectid, reportyear, nacerev21, Export, 
+                      Import, Prihod, Placa, Nett, Zaposleni, 
+                      Grants)] # trebamo samo ove variajble
+gfi_nacerev <- gfi_sample[, lapply(.SD, sum), 
+                          by = c("nacerev21", "reportyear"),
+                          .SDcols = c("Export", "Import", "Prihod", "Placa", 
+                                      "Nett", "Zaposleni", "Grants")]
+setorderv(gfi_nacerev, c("nacerev21", "reportyear"))
+```
+
+```{r}
+# racunanje varijabli
+gfi_nacerev[, `:=`(
+  NetoMarza = Nett / Prihod,
+  IzvovPrihod = Export / Prihod,
+  Produktivnost = Placa / Zaposleni,
+  NetoIzvozPrihodi = (Export - Import) / Prihod
+)]
+```
+
+```{r}
+# Ukupni prihodi
+dt <- gfi_nacerev[nacerev21 %in% c("I", "J"), .(nacerev21, reportyear, 
+                                                IzvovPrihod)]
+ggplot(dt, aes(x = reportyear, y = IzvovPrihod, color = nacerev21)) +
+  geom_line() +
+  ggtitle("Udi izvoza u prihodu za NACEREV-2007 sektore I i J") +
+  labs(x = "Godine", y = "Udio izvoza u prihodu")
+# Neto marza
+```
+
+```{r}
+# produktivnost
+dt <- gfi_nacerev[nacerev21 %in% c("I", "J"), .(nacerev21, reportyear, 
+                                                Produktivnost)]
+ggplot(dt, aes(x = reportyear, y = Produktivnost, color = nacerev21)) +
+  geom_line() +
+  ggtitle("Produktivnost za NACEREV-2007 sektore I i J") +
+  labs(x = "Godine", y = "Odnos plaća i broja zaposlenih")
+```
+
+```{r}
+# neto marza
+dt <- gfi_nacerev[nacerev21 %in% c("I", "J"), .(nacerev21, reportyear, 
+                                                NetoMarza)]
+ggplot(dt, aes(x = reportyear, y = NetoMarza, color = nacerev21)) +
+  geom_line() +
+  ggtitle("Produktivnost za NACEREV-2007 sektore I i J") +
+  labs(x = "Godine", y = "Odnos plaća i broja zaposlenih")
+```
+
+```{r}
+# Neto izvoz
+dt <- gfi_nacerev[nacerev21 %in% c("I", "J"), .(nacerev21, reportyear, 
+                                                NetoIzvozPrihodi)]
+ggplot(dt, aes(x = reportyear, y = NetoIzvozPrihodi, color = nacerev21)) +
+  geom_line() +
+  ggtitle("Produktivnost za NACEREV-2007 sektore I i J") +
+  labs(x = "Godine", y = "Odnos plaća i broja zaposlenih")
+```
+
+```{r}
+# agregacija za cektor J i I
+gfi_sample <- gfi[, .(subjectid, reportyear, nacerev22, Export, Import, 
+                      Prihod, Placa, Nett, Zaposleni, 
+                      Grants)] # trebamo samo ove variajble
+gfi_nacerev2 <- gfi_sample[, lapply(.SD, sum), by = c("nacerev22", "reportyear"),
+                          .SDcols = c("Export", "Import", "Prihod", "Placa", 
+                                      "Nett", "Zaposleni", "Grants")]
+setorderv(gfi_nacerev2, c("nacerev22", "reportyear"))
+
+# racunanje varijabli
+gfi_nacerev2[, `:=`(
+  NetoMarza = Nett / Prihod,
+  IzvovPrihod = Export / Prihod,
+  Produktivnost = Placa / Zaposleni,
+  NetoIzvozPrihodi = (Export - Import) / Prihod,
+  GrantsRatio = Grants / Prihod
+)]
+gfi_nacerev2 <- gfi_nacerev2[nacerev22 %in% c("55", "62")]
+gfi_nacerev2[, nacerev22 := ifelse(nacerev22 == "55", 
+                                   "Smještaj", 
+                                   "Programiranje")]
+gfi_nacerev2[, nacerev22 := as.factor(nacerev22)]
+```
+
+```{r}
+# Udio izvoza u prihodu
+dt <- gfi_nacerev2[, .(nacerev22, reportyear, IzvovPrihod)] 
+ggplot(dt, aes(x = reportyear, y = IzvovPrihod, color = nacerev22)) +
+  geom_line() +
+  ggtitle("Udi izvoza u prihodu za NACEREV-2007 sektore Smještaja i Progamiranja") +
+  labs(x = "Godine", y = "Udio izvoza u prihodu")
+
+```
+
+```{r}
+dt <- gfi_nacerev2[, .(nacerev22, reportyear, NetoMarza)] 
+ggplot(dt, aes(x = reportyear, y = NetoMarza, color = nacerev22)) +
+  geom_line() +
+  ggtitle("Udi izvoza u prihodu za NACEREV-2007 sektore Smještaja i Progamiranja") +
+  labs(x = "Godine", y = "Udio izvoza u prihodu")
+```
+
+```{r}
+dt <- gfi_nacerev2[, .(nacerev22, reportyear, Produktivnost)] 
+ggplot(dt, aes(x = reportyear, y = Produktivnost, color = nacerev22)) +
+  geom_line() +
+  ggtitle("Udi izvoza u prihodu za NACEREV-2007 sektore Smještaja i Progamiranja") +
+  labs(x = "Godine", y = "Udio izvoza u prihodu")
+```
+
+```{r}
+dt <- gfi_nacerev2[, .(nacerev22, reportyear, NetoIzvozPrihodi)] 
+ggplot(dt, aes(x = reportyear, y = NetoIzvozPrihodi, color = nacerev22)) +
+  geom_line() +
+  ggtitle("Udi izvoza u prihodu za NACEREV-2007 sektore Smještaja i Progamiranja") +
+  labs(x = "Godine", y = "Udio izvoza u prihodu")
 ```
