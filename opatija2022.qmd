@@ -6,9 +6,7 @@ author:
 format: docx
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+## 
 
 ```{r}
 #| warning: false
@@ -64,13 +62,15 @@ q <- sprintf("SELECT b335/1000000000 AS Export,
                      b005/1000000000 AS Tech1,
                      b003/1000000000 AS Nematerijalna,
                      b110/1000000000 AS Prihod,
-                     b120/1000000000 AS Placa,
+                     b119/1000000000 AS Placa,
                      b147/1000000000 AS Nett,
                      b329/1000000000 AS Grants,
+                     b123/1000000000 AS Amortizacija,
+                     (b130 - 136) / 1000000000 AS NetoFin,
                      reportyear, subjectid, employeecounteop, foreigncontrol,
                      nacerev21, nacerev22, nacerev23, nacerev24
                 FROM gfi_all 
-                WHERE reportyear >= 2000 AND nacerev21 IN ('J', 'I', 'C');")
+                WHERE reportyear >= 2000 AND nacerev21 IN ('A', 'C', 'J', 'I');")
 gfi <- gfiSelect(q)       # preuzimanje podataka
 gfi <- as.data.table(gfi) # koristenje data.table paketa za data.wangling
 gfi$nacerev22 <- as.character(gfi$nacerev22)
@@ -80,21 +80,31 @@ nkd <- read.csv2("data/cb_reg_activity_translations.csv")
 nkd <- nkd[, c("ActivityID", "ActivityName_.HRV.")]
 ```
 
+## Dinamika ekonomske strukture
+
+Analizu započinjemo prikazom ključnih agregatnih vrijednosti, generiranih iz godišnjih financijskih izvještaja.
+
 ```{r}
 # agregacija za sektor J i I data.table WAY
 gfi_sample <- gfi[, .(subjectid, reportyear, nacerev21, Export, 
                       Import, Prihod, Placa, Nett, Zaposleni, 
-                      Grants)] # trebamo samo ove variajble
+                      Grants, NetoFin, Amortizacija)] # trebamo samo ove varijble
 gfi_nacerev <- gfi_sample[, lapply(.SD, sum), 
                           by = c("nacerev21", "reportyear"),
                           .SDcols = c("Export", "Import", "Prihod", "Placa", 
-                                      "Nett", "Zaposleni", "Grants")]
+                                      "Nett", "Zaposleni", "Grants",
+                                      "NetoFin", "Amortizacija")]
 setorderv(gfi_nacerev, c("nacerev21", "reportyear"))
+gfi_nacerev[nacerev21 == "A", sektor := "Poljoprivreda"]
+gfi_nacerev[nacerev21 == "C", sektor := "Proizvodnja"]
+gfi_nacerev[nacerev21 == "I", sektor := "Turizam"]
+gfi_nacerev[nacerev21 == "J", sektor := "Informacije"]
 ```
 
 ```{r}
 # racunanje varijabli
 gfi_nacerev[, `:=`(
+  DodanaVrijednost = Placa + Nett + NetoFin + Amortizacija,
   NetoMarza = Nett / Prihod,
   IzvovPrihod = Export / Prihod,
   Produktivnost = Placa / Zaposleni,
@@ -102,46 +112,102 @@ gfi_nacerev[, `:=`(
 )]
 ```
 
+BDP kao ključna makroekonomska varijabla može se računati kao suma dodanih vrijendosti ostvarenih od strane ekonomskih agenata u gospodarstvu. Zato na početku analize prikazujemo udio dodane nove vrijednosti u ukupnom prihodu za promatrane sektore - poljoprivreda, proizvodnja, turizam i informacije.
+
+Prije deskriptivne analize, važno je razumjeti kako se iz financijskih izvještaja pojedinih tvrtki jednostavnom algebrom izvodi agregatna mjera BDP-a. Kreće se od računa dobiti i gubitka:
+
+\$\$Prihodi - DirektniTroškovi - IzdaciTvrtkama = TroškoviRada + Kamate + Dividende + Rente + Amortizacija + Profit\$\$
+
+Jednadžba vjerno pokazuje dvostruku narav dodane vrijednosti. S proizvodnog aspekta (lijeva strana jednadžbe), dodana nova vrijednost je jednaka razlici prihoda (ukupnog outputa na razini zemlje) i direktnih troškova, povezanih s proizvodnjom dobara (intermedijarna dobra na agregatnoj razini). Desna strana jednadžbe definira dodanu novu vrijednost s dohodovnog aspekta, odnosno kao zbroj svih dohodaka koja (nefinancijski) poslovni subjekti isplaćuju. Dakle, dodana vrijednost na razini poslovnog subjekta je jednaka:
+
+\$\$Dodanavrijednost = TroškoviRada + Kamate + Dividende + Rente + Amortizacija + Profit\$\$
+
+Ova jednadžba vrijedi sa sve firme unutar neke ekonomije. Ona vrijedi i za ostale (institucionalne) jedinice koje stvaraju dodanu novu vrijednost poput središnje države, lokalne vlasti, izvanproračunskih korisnika, OPG-ova i financijskih institucija. Sumiranjem obje strane jednadžbe za sve tvrtke (i ostale jedinice) u ekonomiji dobiva se:
+
+\$\$BDP = \\sum TroškoviRada + \\sum Kamate + \\sum Dividende + \\sum Rente + \\sum Amortizacija + \\sum Profit\$\$
+
+Lijeva strana jednadžbe je BDP jer je BDP po definiciji jednak sumi dodane nove vrijednosti svih firmi. Desna strana jednadžbe se naziva i bruto domaći dohodak, i u teoriji bi trebao biti jednak BDP-u. Valja napomenuti da BDP, odnosno dodana nova vrijednost ne govori mnogo o uspješnosti neke kompanije. Ona je jednostavno mjera ukupne proizvodnje.
+
+Pokazano je kako se iz zbroja dodane nove vrijednosti svih tvrtki računa bruto domaći proizvod jedne države. Analiza BDP-a s ovog aspekta može pružiti dodane uvide u opisu i objašnjenju ekonomskog rasta u RH. Za početak, korisno je analizirati kretanje ukupne dodane nove vrijednosti nefinancijskih poslovnih subjekata po promatranim sektorima u RH. Na slici xx je prikazano kretanje agregatne dodane nove vrijednosti u odnosu na ukupne prihode za razdoblje 2001-2019. Slika jasno pokazuje da Informacije i turizam ostvaruju znatno veći omejr dodane vrijednosti i prihoda. Sektor Informacija je bilježio veće vrijendosti prje 2015., nakon čega veće vrijednosti bilježi turizam. Načelno, može se zaključiti da sektor usluga ostvauje mnogo veću dodanu vrijednost po zarađenom prihodu od sektora proizvodnje i poljoprivrede.
+
+```{r}
+#| fig-alt: "Dinamika dodane vrijednosti za sektore A (Poljoprivreda), C (proizvodnja), I (usluge smještaja) i J (infromacijske usluge)."
+#| 
+# Ukupni prihodi
+dt <- gfi_nacerev[nacerev21 %in% c("A", "C", "I", "J"),
+                  .(sektor, reportyear, DNV = DodanaVrijednost / Prihod)]
+ggplot(dt, aes(x = reportyear, y = DNV, color = sektor)) +
+  geom_line() +
+  ggtitle("Udio izvoza u prihodu za NACEREV-2007 sektore A, C, I i J") +
+  labs(x = "Godine", y = "Udio izvoza u prihodu")
+```
+
+Na sljedećoj slici prikazujemo strukturu dodane vrijednosti za protrane sektore kroz vrijeme:
+
 ```{r}
 # Ukupni prihodi
-dt <- gfi_nacerev[nacerev21 %in% c("I", "J"), .(nacerev21, reportyear, 
-                                                IzvovPrihod)]
-ggplot(dt, aes(x = reportyear, y = IzvovPrihod, color = nacerev21)) +
+dt <- gfi_nacerev[nacerev21 %in% c("A", "C", "I", "J"),
+                  .(sektor, reportyear, Amortizacija, NetoFin, 
+                    Placa, Nett = ifelse(Nett< 0, 0, Nett))]
+dt <- melt(dt, id.vars = c("sektor", "reportyear"))
+ggplot(dt, aes(x = reportyear, y = value, fill = variable)) +
+  geom_bar(stat = "identity", position = "fill") +
+  facet_wrap(vars(sektor)) + 
+  ggtitle("Udio izvoza u prihodu za NACEREV-2007 sektore A, C, I i J") +
+  labs(x = "Godine", y = "Udio izvoza u prihodu")
+```
+Struktura dodane vrijednosti pokazuje da najveći udio u svim sektorima ima trošak osoblja. Udio troškova osoblja je oko 60% dodane nove vrijednosti kod sektora poljoprivrede, turizma i proizvodnje. Po visini udjela slijedi amortizacija, koja čini cca. Neto dobit pokazuje značajne oscilacije kod svih sektora.U sektoru informacija najveći udio ostvaruje Neto dobit, što indicira veću profitabilnsot ovog sektora u odnosu na ostale. Neto financijski rashodi su mali udio ukupne dodane vrijednosti. Amortizacija je očekivano najveća u sektoru turizma. Ali u posljednjih godinama i drugi sektori ostvaruju relativno značajnu amortizaciju.
+
+```{r}
+#| fig-alt: "Dinamika ukupnih prihoda za sektore A (Poljoprivreda), C (proizvodnja), I (usluge smještaja) i J (infromacijske usluge)."
+#| 
+# Ukupni prihodi
+dt <- gfi_nacerev[nacerev21 %in% c("A", "C", "I", "J"),
+                  .(sektor, reportyear,IzvovPrihod)]
+ggplot(dt, aes(x = reportyear, y = IzvovPrihod, color = sektor)) +
   geom_line() +
-  ggtitle("Udi izvoza u prihodu za NACEREV-2007 sektore I i J") +
+  ggtitle("Udio izvoza u prihodu za NACEREV-2007 sektore A, C, I i J") +
   labs(x = "Godine", y = "Udio izvoza u prihodu")
 # Neto marza
 ```
 
-```{r}
-# produktivnost
-dt <- gfi_nacerev[nacerev21 %in% c("I", "J"), .(nacerev21, reportyear, 
-                                                Produktivnost)]
-ggplot(dt, aes(x = reportyear, y = Produktivnost, color = nacerev21)) +
-  geom_line() +
-  ggtitle("Produktivnost za NACEREV-2007 sektore I i J") +
-  labs(x = "Godine", y = "Odnos plaća i broja zaposlenih")
-```
-
-```{r}
-# neto marza
-dt <- gfi_nacerev[nacerev21 %in% c("I", "J"), .(nacerev21, reportyear, 
-                                                NetoMarza)]
-ggplot(dt, aes(x = reportyear, y = NetoMarza, color = nacerev21)) +
-  geom_line() +
-  ggtitle("Produktivnost za NACEREV-2007 sektore I i J") +
-  labs(x = "Godine", y = "Odnos plaća i broja zaposlenih")
-```
+Slika xx. pokazuje dinamiku izvoza za 4 nacerev djelatnosti koje aproksimativno odražavaju primarni, sekundarni, tercijarni i kvartarni sektor. Najveći udio izvoza u ukupnim prihodima ostvaruje proizvodni sektor., slijedi turizam, informacije, a poljoprivreda je na posljednjem mjestu. Dinamika serije otkriva da svi sektori osim turizma ostvaruju pozitivne stope rasta udjela izvoza u ukupnom prihodu. Ako se trend nastavi, u narednim godinama bi sektor informacija mogao prestći turizam prema udjelu izvoza u ukupnom prihodu.
 
 ```{r}
 # Neto izvoz
-dt <- gfi_nacerev[nacerev21 %in% c("I", "J"), .(nacerev21, reportyear, 
-                                                NetoIzvozPrihodi)]
-ggplot(dt, aes(x = reportyear, y = NetoIzvozPrihodi, color = nacerev21)) +
+dt <- gfi_nacerev[nacerev21 %in% c("A", "C", "I", "J"), 
+                  .(sektor, reportyear, NetoIzvozPrihodi)]
+ggplot(dt, aes(x = reportyear, y = NetoIzvozPrihodi, color = sektor)) +
   geom_line() +
   ggtitle("Produktivnost za NACEREV-2007 sektore I i J") +
   labs(x = "Godine", y = "Odnos plaća i broja zaposlenih")
 ```
+
+Slika xx. pokazuje odnos neto izvoza i prihoda. za razliku od prethodne slike, turizam ostvaruje najveće udjele neto izvoza. Ostali sektori su mnogo više ovisni o uviznim proizvodima. Kod sektora poljoprivrede postoji neobično niska vrijednost u jednoj godini (outlier), ali konzistentno ostvaruje najmanje razine neto izvoza u odnosu na ukupne prihode.
+
+```{r}
+# produktivnost
+dt <- gfi_nacerev[nacerev21 %in% c("A", "C", "I", "J"), 
+                  .(sektor, reportyear, Produktivnost)]
+ggplot(dt, aes(x = reportyear, y = Produktivnost, color = sektor)) +
+  geom_line() +
+  ggtitle("Produktivnost za NACEREV-2007 sektore A, C, I i J") +
+  labs(x = "Godine", y = "Odnos plaća i broja zaposlenih")
+```
+
+Produktivnost se smatra temeljnim faktorim dugoročnog ekonomskog rasta, stoga na grafu xx. prikazujemo dinamiku pokazatelja produktivnosti za 4 temeljna sektora. Kao mjera produktivnosti koristi se produktivnost tada, odnosno omjer ukupnih rashoda za zaposlene (bruto plaće i ostala davanja) i prosječnog broja zaposlenih na kraju razdoblja. Slika xx. pokazuje da sektor informacija pokazuje znatno veću produktivnost od ostalih sektora. Ostali sektori pokazuju vrlo slične razine produktivnosti. Najmanju razinu ima turizam.
+
+```{r}
+# neto marza
+dt <- gfi_nacerev[nacerev21 %in% c("A", "C", "I", "J"), 
+                  .(sektor, reportyear, NetoMarza)]
+ggplot(dt, aes(x = reportyear, y = NetoMarza, color = sektor)) +
+  geom_line() +
+  ggtitle("Neto marža za NACEREV-2007 sektore A, C, I i J") +
+  labs(x = "Godine", y = "Odnos dobiti i prihoda")
+```
+
+Sljedeći grafikon prikazuje agregatnu neto maržu za promatrane djelatnosti. Sektor informacija ponovno ostvaruje najbolje rezultate na agregatnoj razini. Slijede turizam, proizvodnja, pa poljoprivreda. Zanimljivo je primjetiti kako je turizam većinu vremena ostvarivao negativne neto marže.
 
 ```{r}
 # agregacija za cektor J i I
@@ -201,3 +267,7 @@ ggplot(dt, aes(x = reportyear, y = NetoIzvozPrihodi, color = nacerev22)) +
   ggtitle("Udi izvoza u prihodu za NACEREV-2007 sektore Smještaja i Progamiranja") +
   labs(x = "Godine", y = "Udio izvoza u prihodu")
 ```
+
+Literatura
+
+https://growthecon.com/blog/Accounting-Profits/
