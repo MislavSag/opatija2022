@@ -152,12 +152,8 @@ U literaturi je prikazano da ekonomsku strukturu na agregatnoj razini objašnjav
 4.  kvartarni sektor: K, L, M i N,
 5.  kvintarni sektori O, P, Q, S i I.
 
-Udio pojedinog sektora u ukupnoj ekonomskoj strukturi može se analizirati pomoću različitih varijabli. U prvom dijelu analize, kod analize svih sektora koristit ćemo 4 varijable: zaposlenost, ukupni prihodi, dodana vrijednost i izvoz. 
+Udio pojedinog sektora u ukupnoj ekonomskoj strukturi može se analizirati pomoću različitih varijabli. U prvom dijelu analize, kod analize svih sektora, koristit ćemo 4 varijable: zaposlenost, ukupni prihodi, dodana vrijednost i izvoz. 
 
-\$\$Dodanavrijednost = TroškoviRada + Kamate + Dividende + Rente + Amortizacija + Profit\$\$
-
-Ova jednadžba vrijedi sa sve firme unutar neke ekonomije. Ona vrijedi i za ostale (institucionalne) jedinice koje stvaraju dodanu novu vrijednost poput središnje države, lokalne vlasti, izvanproračunskih korisnika, OPG-ova i financijskih institucija. Sumiranjem obje strane jednadžbe za sve tvrtke (i ostale jedinice) u ekonomiji dobiva se:
-geo2 <- unique(opcine[, .(OPCINA, NAZIV_OPC)])
 
 ``` {r}
 # zupanije
@@ -265,11 +261,11 @@ g4 <- ggplot(struktura_rh_zap, aes(reportyear, Zaposlenost, fill = djelatnosti))
 ) & theme(legend.position = 'bottom')
 ```
 
-Slika xx. prikazuje udjele svakog sektora kroz vrijeme za različite riterije analize. Kao kriteriji za analizu sektorskih udjela korišteni su: ukupni prihod, dodana vrijednost, zaposlenost i izvoz. Ako se kao kriterij koristi ukupni prihod, vidljivo je da u ekonomskoj strukturi najveći udio imaju sekundarni i tercijarni sektor. Slijedi kvartarni sektor, dok ostali (primarni i kvintarni) imaju vrlo niske udjele. Na početku razdoblja (2000.), najveći udio ima tercijarni sektor (47%) slijedi sekundarni sektor sa 43%, kvartarni sa 6%, primarni 3% i kvintarni 1%. Na kraju razdoblja (2019 godina), udjeli su sljedeći: tercijarni sektor čini 49% udjela, sekundarni 38% udjela kvartarni 8%, primarni 3% i kvintarni 2%. Može se dakle zaključiti je u 20 godina tercijarni sektor blago povećao svoj udjel i postao najveći sektor po udjelu ukupnih prihoda u ukupnim prihodima svih djelatnosti. Drugi najveći je sekundarno sektor, ali ima sve manji udio kroz vrijeme. Kvartarni i kvintarni sektor rasti, dok primarni stagnira.
+Analizu započinjemo analizom ekonomske strukture prema svakoj varijabli. Kao kriteriji za analizu sektorskih udjela korišteni su: ukupni prihod, dodana vrijednost, zaposlenost i izvoz. Ako se kao kriterij koristi ukupni prihod, vidljivo je da u ekonomskoj strukturi najveći udio imaju sekundarni i tercijarni sektor. Slijedi kvartarni sektor, dok ostali (primarni i kvintarni) imaju vrlo niske udjele. Na početku razdoblja (2000.), najveći udio ima tercijarni sektor (47%) slijedi sekundarni sektor sa 43%, kvartarni sa 6%, primarni 3% i kvintarni 1%. Na kraju razdoblja (2019 godina), udjeli su sljedeći: tercijarni sektor čini 49% udjela, sekundarni 38% udjela kvartarni 8%, primarni 3% i kvintarni 2%. Može se dakle zaključiti je u 20 godina tercijarni sektor blago povećao svoj udjel i postao najveći sektor po udjelu ukupnih prihoda u ukupnim prihodima svih djelatnosti. Drugi najveći je sekundarno sektor, ali ima sve manji udio kroz vrijeme. Kvartarni i kvintarni sektor rastu, dok primarni stagnira.
 
-Raščlanivanje ekonomske strukture po dodanoj vrijednosti daje sličnu dinamiku, lai razli;ite vrijendosti udjela. Na početku razdoblja prednjači sekudnarni sektor sa 52% udjela, a sliejde tesrcijarni sa 35% i kvartarni sa 10%. Na kraju razdoblja sekdunarni sektor gubi na značaju i čini 38%, a tercijarni sektor ga prestiže i čini 40% udjela. Kvartarni dobiva na značenju i čini 14% udjela. Isto kao i kvintarni koji raste sa 15 na 4%. Ukratko, prema kriteriju dodane vrijednosti tercijarni sektor prestiže sekundarni i postaje dominirani sektor u RH. Sekundarni sektor gubi na veličini, ali još uvijek ima veliki udio.
+Raščlanjivanje ekonomske strukture po dodanoj vrijednosti daje sličnu dinamiku, lai različite vrijednosti udjela. Na početku razdoblja prednjači sekundarni sektor sa 52% udjela, a slijede tercijarni sa 35% i kvartarni sa 10%. Na kraju razdoblja sekundarni sektor gubi na značaju i čini 38%, a tercijarni sektor ga prestiže i čini 40% udjela. Kvartarni dobiva na značenju i čini 14% udjela. Isto kao i kvintarni koji raste sa 1% na 4%. Ukratko, prema kriteriju dodane vrijednosti tercijarni sektor prestiže sekundarni i postaje dominantni sektor u RH. Sekundarni sektor gubi na veličini, ali još uvijek ima veliki udio.
 
-Pram kriteriju zaposlenosti, nalazi su isti kao i kod dodane virjendosti, pa nije potrebn adetaljnija analiza. Međutim za varijablu izvoza su rezultate i nešto drugačiji. NA poečtku razodblja (2000. godina), sekundarni sektor ima najveći udio izvoza, čak 70%. Slijedi tesrcijarni sektor sa 25%, kvartarni sektor sa 4%, dok primarni i kvintarni zajedno čine 1%. Na kraju razdoblja, udio izvoza sekundarnog sektora pada na 55%, tericjarni sektor sve više izozi, pa raste do 33%, kvaratrni također raste, na 8%, dok ostali stagniraju. SEkundarni sektor dakle čini glavninu izvoza, ali ga sve više zamjenjuju tercijarni i kvartarni sektor.
+Pram kriteriju zaposlenosti, nalazi su isti kao i kod dodane vrijednosti, pa nije potrebna detaljnija analiza. Međutim za varijablu izvoza su rezultate i nešto drugačiji. Na početku razdoblja (2000. godina), sekundarni sektor ima najveći udio izvoza, čak 70%. Slijedi tercijarni sektor sa 25%, kvartarni sektor sa 4%, dok primarni i kvintarni zajedno čine 1%. Na kraju razdoblja, udio izvoza sekundarnog sektora pada na 55%, tercijarni sektor sve više izvozi, pa raste do 33%, kvartarni također raste, na 8%, dok ostali stagniraju. Sekundarni sektor dakle čini glavninu izvoza, ali ga sve više zamjenjuju tercijarni i kvartarni sektor.
 
 ```{r}
 # prihodi
@@ -303,9 +299,9 @@ g1 / g2 +
 ) & theme(legend.position = 'bottom')
 ```
 
-Na slici xx. prikazujemo ekonomsku strukturu prema geografskim obilježjima. Budući da zaposlenost, ukupni prihodi i dodana vrijednost ima sličnu dinamiku, pkoristimo dvije varijable - ukupne prihode i izvoz. Umjesto vremenske dimenzije pogled usmjerava na raspodjelu vrijednosti po županijama. Svi grafikoni se odnose na vrjednosti u 2019. godinu. Gornji grafikon prikazuje udio pojedinog sektora (primarni, sekundarni, tesricjanri, kvartarni, kvintarni) u ekonomskoj strukturi za svaku županiju. Mogu se uočiti značajen razlike po županijama. Na primjer, najveći udio tercijarnih djelantosti prema ukupnom prihodu imaju Zagrebačka i dubrovačko-neretvanska županija. Međimurska i osječko-baranjska imaju največi udio sekundarnog sektora. Iz grafa se može indicirtati i korelacija između udjela tercijarnog sektora i razvijenosti županije.
+Na slici xx. prikazujemo ekonomsku strukturu prema geografskim obilježjima. Budući da zaposlenost, ukupni prihodi i dodana vrijednost ima sličnu dinamiku, koristimo dvije varijable - ukupne prihode i izvoz. Umjesto vremenske dimenzije pogled usmjerava na raspodjelu vrijednosti po županijama. Svi grafikoni se odnose na vrijednosti u 2019. godini. Gornji grafikon prikazuje udio pojedinog sektora (primarni, sekundarni, tercijarni, kvartarni, kvintarni) u ekonomskoj strukturi za svaku županiju. Mogu se uočiti značajne razlike po županijama. Na primjer, najveći udio tercijarnih djelatnosti prema ukupnom prihodu imaju zagrebačka i dubrovačko-neretvanska županija. Međimurska i osječko-baranjska imaju najveći udio sekundarnog sektora. Iz grafa se može indicirati i korelacija između udjela tercijarnog sektora i razvijenosti županije.
 
-Donji dio slike prikazuje ekonomsku strutkuru prema udjelu izvoza u svakom sektoru, u 2019. godini. Kao nebična stavka pojavljuje se dubrovačko-neretvanska županija. Pretpostavljamo da je glavni razlog veliki udio turzma, koji čini oko 70% izvoza. Slična je interpretacija i za istarsku županiju. S druge strane neke županije glavnivnu izvoza ostvaruju u sekundarnom sektoru. Primjer je virovitičko-podravska i vukovarsko-srijemska županija. Može se zaključiti da kod udjela izvoza postoje još veće geografkse razlike u ekonomskoj strukturi.
+Donji dio slike prikazuje ekonomsku strukturu prema udjelu izvoza u svakom sektoru, u 2019. godini. Kao neobična stavka pojavljuje se dubrovačko-neretvanska županija. Pretpostavljamo da je glavni razlog veliki udio turizma, koji čini oko 70% izvoza. Slična je interpretacija i za istarsku županiju. S druge strane neke županije glavninu izvoza ostvaruju u sekundarnom sektoru. Primjer je virovitičko-podravska i vukovarsko-srijemska županija. Može se zaključiti da kod udjela izvoza postoje još veće geografske razlike u ekonomskoj strukturi.
 
 
 ```{r}
@@ -384,14 +380,14 @@ g4 <- ggplot(struktura_rh_zap, aes(reportyear, Zaposlenost, fill = djelatnosti))
 ) & theme(legend.position = 'bottom')
 ```
 
-Dosadašanja analiza je potvrdila sve veću važnost tercijarnog sektora u ekonomskoj strukturi s jedne strane, te indicirala povezanost ekonomske razvijenosti pojedinih županije i udjela tercijarnogg sektora s druge strane. Zbog važnosti ovog sektora, u nastavku detaljnije analiziramo tercijarni sektor. Prvo prikazujemo ekonomsku strukturu tercijarnog sektora prema istom obrascu - prikazujemo strukturu prema dodanoj vrijednosti, zaposlenosti, izvozu i ukupnom prohodu. U sljedećem poglavlju se posebno fokusiramo na sektor turizma i programiranja.
+Dosadašnja analiza je potvrdila sve veću važnost tercijarnog sektora u ekonomskoj strukturi s jedne strane, te indicirala povezanost ekonomske razvijenosti pojedinih županije i udjela tercijarnog sektora s druge strane. Zbog važnosti ovog sektora, u nastavku detaljnije analiziramo tercijarni sektor. Prvo prikazujemo ekonomsku strukturu tercijarnog sektora prema istom obrascu - prikazujemo strukturu prema dodanoj vrijednosti, zaposlenosti, izvozu i ukupnom prohodu. U sljedećem poglavlju se posebno fokusiramo na sektor turizma i programiranja.
 
-Slika xx. prikazuje dinamiku ekonomske strukture tercijarnog sektora. Prema svim varijablama, sektor trgovine čini najveći udio. Međutim dinamika pokazuje da ostali sketori poprimaju sve važnoju ulogu. Prema udjelu dodane vrijednosti sektor trgovine pada sa 75% dodane vrijednosti na 72%. Raste sektor smještaja s 4% na 8%, dok ostali setkori ostaju nepromjenjeni. Ako se promatra izvoz, rezultati su ponovno znazno drugačiji. Sektor trgovine čini sve veći udio izvoza, dok sektor prijevoza čini sve manji udio.
+Slika xx. prikazuje dinamiku ekonomske strukture tercijarnog sektora. Prema svim varijablama, sektor trgovine čini najveći udio. Međutim dinamika pokazuje da ostali sektori poprimaju sve važniju ulogu. Prema udjelu dodane vrijednosti sektor trgovine pada sa 75% dodane vrijednosti na 72%. Raste sektor smještaja s 4% na 8%, dok ostali sektori ostaju nepromijenjeni. Ako se promatra izvoz, rezultati su ponovno drugačiji. Sektor trgovine čini sve veći udio izvoza, dok sektor prijevoza čini sve manji udio.
 
 
 ## Sektor turizma i programiranja
 
-Veći relativni udio usluga u BDP-u predstavlja stiliziranu činjenicu ekonomskog rata. Usluge imaju sve veću važnost u po svim makroekonomksim parametrima (BDP, zaposlenost, izvoz i dr.). Stoga u ovom poglavlju analiziramo detaljnije dva podsektora (druga NACEREV razina), sektora turizma i sektor programiranja. Razlog izbora turizma kao objekta promatranja je očit. Turizam je ekonomska grana od strateškog značenja za RH. Prihode od turizma je vrlo teško mjeriti[^1] jer postoje snažni efekti preljevanja između turističkog i drugih sektora. Također, većina "malih" iznajmljivača ne predaje podatke o prigodima. U predmetnoj analizi se pod sektorom turizma označava sektor I - djelatnosti pružanja smještaja te pripreme i usluživanja hrane. Sektor programiranja čine sektori 62 - Računalno programiranje, savjetovanje i djelatnosti povezane s njima i 63.1 - Obrada podataka, usluge poslužitelja i djelatnosti povezane s njima; internetski portali.
+Veći relativni udio usluga u BDP-u predstavlja stiliziranu činjenicu ekonomskog rata. Usluge imaju sve veću važnost u po svim makroekonomskim parametrima (BDP, zaposlenost, izvoz i dr.). Stoga u ovom poglavlju analiziramo detaljnije dva podsektora (druga NACEREV razina), sektora turizma i sektor programiranja. Razlog izbora turizma kao objekta promatranja je očit. Turizam je ekonomska grana od strateškog značenja za RH. Prihode od turizma je vrlo teško mjeriti[^1] jer postoje snažni efekti prelijevanja između turističkog i drugih sektora. Također, većina "malih" iznajmljivača ne predaje podatke o prihodima. U predmetnoj analizi se pod sektorom turizma označava sektor I - djelatnosti pružanja smještaja te pripreme i usluživanja hrane. Sektor programiranja čine sektori 62 - Računalno programiranje, savjetovanje i djelatnosti povezane s njima i 63.1 - Obrada podataka, usluge poslužitelja i djelatnosti povezane s njima; internetski portali.
 
 ```{r}
 # agregacija za sektor J i I data.table WAY
@@ -499,7 +495,7 @@ g4 <- ggplot(struktura_rh_zap, aes(reportyear, Zaposlenost, fill = djelatnosti))
 ) & theme(legend.position = 'bottom')
 ```
 
-Analizu započinjemo analizom dinamike 4 osnovne varijable iz prethodnog poglavlja - dodana vrijednost, zaposlenost, ukupni prihod i izvoz. Rezultat je vidljiv na slici xx. Turizam ostvaruje mnogo veće vrijednosti kod svih promatranih variajbli, ali postoji jasan trend relativno veće važnosti programiranja. Primjerice, na početku razodblja odnos ukupnih prihoda između turizma i programiranja iznosio je 1:5 (20$ programiranje, 80% turizam), dok je na kraju razdoblja odnos 30% - 70%. Ko izvoza je promjena još naglašenija. Odnos je bio 88% turizam / 12% progamiranje, dok je 2019. odnos 62% turizam / 38% programiranje. Može se zaključiti da turizam još uvijek čini mnogo veći udio u ekonomskoj strukturi, ali programiranje bilježi veće stope rata i konvergira sektoru turizma prema svim promatranim parametrima.
+Analizu započinjemo analizom dinamike 4 osnovne varijable iz prethodnog poglavlja - dodana vrijednost, zaposlenost, ukupni prihod i izvoz. Rezultat je vidljiv na slici xx. Turizam ostvaruje mnogo veće vrijednosti kod svih promatranih varijabli, ali postoji jasan trend relativno veće važnosti programiranja. Primjerice, na početku razdoblja odnos ukupnih prihoda između turizma i programiranja iznosio je 1:5 (20% programiranje, 80% turizam), dok je na kraju razdoblja odnos 30% - 70%. Kod izvoza je promjena još naglašenija. Odnos je bio 88% turizam / 12% programiranje, dok je 2019. odnos 62% turizam / 38% programiranje. Može se zaključiti da turizam još uvijek čini mnogo veći udio u ekonomskoj strukturi, ali programiranje bilježi veće stope rata i konvergira sektoru turizma prema svim promatranim parametrima.
 
 
 ```{r}
@@ -522,7 +518,7 @@ ggplot(gfi_naverev24,
   guides(fill=guide_legend(nrow=3, byrow=TRUE))
 ```
 
-AnaAnalizu turističkog i programerskoAnalizu turističkog i programerskoAnalizu turističkog i programerskoEV 4. razine (slika xx.).Kod sektora programiranja n nastavljamo analizom strukture dodane vrijerogramiranje. Kod sektora turizma najveći udio bilježi sektor 5501 - hoteli i sličan smještaj, a drugi najveći udio ima podsektor 5610 - djelatnosti restorana i ostalih objekata za pripremu i usluživanje hrane.
+Analizu turističkog i programerskog sektora sektora nastavljamo analizom strukture dodane vrijednosti prema NACEREV 4. razini (slika xx.). Kod sektora turizma najveći udio bilježi sektor 5501 - hoteli i sličan smještaj, a drugi najveći udio ima podsektor 5610 - djelatnosti restorana i ostalih objekata za pripremu i usluživanje hrane. Kod sektora programiranja najveći udio ima sektor 6201 - Računalno programiranje.
 
 ```{r}
 gfi_naverev_dv <- gfi_sample_turizam_prog[, lapply(.SD, sum), 
@@ -547,11 +543,9 @@ ggplot(gfi_naverev_dv,
   guides(fill=guide_legend(nrow=3, byrow=TRUE))
 ```
 
-Slika xx. prikazuje strukturu dodane vrijednosti prema tipu dohotka koji generira dodanu vrijednost (bruto dobit, trošak osoblja, neto financijski prihodi, amortizacija). Struktura dodane vrijednosti pokazuje da najveći udio u svim sektorima ima trošak osoblja. Udio troškova osoblja je oko 55% dodane nove vrijednosti kod sektora turizma te oko 60% kod sektora programiranja. Kod turizma, po visini udjela slijedi amortizacija, koja čini cca 25% dodane vrijednosti, dok je kod sektora programiranja udio amortizacije tek oko 8%. Bruto dobit pokazuje značajne oscilacije kod svih sektora.U sektoru programiranja bruto dobit čini 28% dodane vrijednosti, a kod turizma 15% na kraju razodblja, što indicira veću profitabilnsot sektora programiranja u odnosu na sektor turizma. Zanimljivo je primjetiti i da je sektor turizma bilježio negativnu agregatnu bruto dobit nekoliko godina za redom, dok je kod sektora progrmiranja bruto dobit vrlo stabilna. Neto financijski rashodi su mali udio ukupne dodane vrijednosti.
+Slika xx. prikazuje strukturu dodane vrijednosti prema tipu dohotka koji generira dodanu vrijednost (bruto dobit, trošak osoblja, neto financijski prihodi, amortizacija). Struktura dodane vrijednosti pokazuje da najveći udio u oba sektora ima trošak osoblja. Udio troškova osoblja je oko 55% dodane nove vrijednosti kod sektora turizma te oko 60% kod sektora programiranja. Kod turizma, po visini udjela slijedi amortizacija, koja čini cca 25% dodane vrijednosti, dok je kod sektora programiranja udio amortizacije tek oko 8%. Bruto dobit pokazuje značajne oscilacije kod svih sektora. U sektoru programiranja bruto dobit čini 28% dodane vrijednosti, a kod turizma 15% na kraju razdoblja, što indicira veću profitabilnost sektora programiranja u odnosu na sektor turizma. Zanimljivo je primijetiti i da je sektor turizma bilježio negativnu agregatnu bruto dobit nekoliko godina za redom, dok je kod sektora programiranja bruto dobit vrlo stabilna. Neto financijski rashodi su mali udio ukupne dodane vrijednosti.
 
-Agregatne razine varijabli ne daju kompletan uvid u perspektivnost pojedinih (pod)sektora. Usporedba performansi zahtijeva upotrebu pokazatelja poslovanja, koji odražavaju količinu kvalitete ekonomskih procesa. Na sljedećoj slici stoga prikazujemo 
-neke od pokazatelja performasi za oba sektora. Točnije, prikazuje se dinamika sljedećih varijabli: udio dodane nove vrijednosti u ukupnim prihodima, neto marža, produktivnost i udio neto izvoza u prihodima.
-
+Agregatne razine varijabli ne daju kompletan uvid u perspektivnost pojedinih (pod)sektora. Usporedba performansi zahtijeva upotrebu pokazatelja poslovanja, koji odražavaju količinu kvalitete ekonomskih procesa. Na sljedećoj slici stoga prikazujemo neke od pokazatelja performansi za oba sektora. Točnije, prikazuje se dinamika sljedećih varijabli: udio dodane nove vrijednosti u ukupnim prihodima, neto marža, produktivnost i udio neto izvoza u prihodima.
 
 ```{r}
 # Udio izvoza u prihodu, neto marza
@@ -567,16 +561,16 @@ ggplot(dt_performanse,
 
 ```
 
-Prvi graf na slici xx. pokazuje dinamiku neto marže u promatranom razdoblju. Sektor programiranja konzistentno ostvaruje veće neto marže od sektora turizma. Zanimljivo je primjetiti kako je turizam u otprilike pola razdoblja ostvarivao negativne neto marže.
+Prvi graf na slici xx. pokazuje dinamiku neto marže u promatranom razdoblju. Sektor programiranja konzistentno ostvaruje veće neto marže od sektora turizma. Zanimljivo je primijetiti kako je turizam u otprilike pola razdoblja ostvarivao negativne neto marže.
 
-Produktivnost se smatra temeljnim faktorim dugoročnog ekonomskog rasta, stoga na drugom grafu slike xx. prikazujemo dinamiku pokazatelja produktivnosti za 4 temeljna sektora. Kao mjera produktivnosti koristi se produktivnost rada, odnosno omjer ukupnih rashoda zaposlenih (bruto plaće i ostala davanja) i prosječnog broja zaposlenih prema satima rada, na kraju razdoblja. Graf otkriva da sektor programiranja ostvaruje znatno veću produktivnost od sektora programiranja.
+Produktivnost se smatra temeljnim faktorima dugoročnog ekonomskog rasta, stoga na drugom grafu slike xx. prikazujemo dinamiku pokazatelja produktivnosti za 4 temeljna sektora. Kao mjera produktivnosti koristi se produktivnost rada, odnosno omjer ukupnih rashoda zaposlenih (bruto plaće i ostala davanja) i prosječnog broja zaposlenih prema satima rada, na kraju razdoblja. Graf otkriva da sektor programiranja ostvaruje znatno veću produktivnost od sektora programiranja.
 
-Skjedeći grafikon pokazuje odnos neto izvoza i prihoda. Za razliku od prethodne slike, turizam ostvaruje veće udjele neto izvoza od sektora programiranjasve do 2015. godine, i nakon 2016. godine. Trend pokazuje da programiranje ostvaruje sve bolje izvozne performanse, dok su neto izvozne performanse sektora turima u najbolju ruku stabilne. Iako se izvozni potencijal ističe kao glavni faktor važnosti turizma, očito je da programiranje prema istom zaslužuje istu potpotu iz javnih resura.  
+Sljedeći grafikon pokazuje odnos neto izvoza i prihoda. Za razliku od prethodne slike, turizam ostvaruje veće udjele neto izvoza od sektora programiranja sve do 2015. godine, i nakon 2016. godine. Trend pokazuje da programiranje ostvaruje sve bolje izvozne performanse, dok su neto izvozne performanse sektora turizma u najbolju ruku stabilne. Iako se izvozni potencijal ističe kao glavni faktor važnosti turizma, očito je da programiranje prema istom zaslužuje istu potporu iz javnih resursa.
 
-Na slici xx je prikazano i kretanje agregatne dodane nove vrijednosti u odnosu na ukupne prihode za razdoblje 2001-2019. Sektor programirnaja je bilježio veće vrijendosti između 2007. i  2015. godine, nakon čega veće vrijednosti bilježi turizam.Ukupno gledajući, može se reći da obja sektora u prosjeku ostvaruju podjednake razine dodane vrijednosti u odnosu na ukupne prihode, ali i da turizam pokazuje znatno veću volatilnost.
+Na slici xx je prikazano i kretanje agregatne dodane nove vrijednosti u odnosu na ukupne prihode za razdoblje 2001-2019. Sektor programiranja je bilježio veće vrijednosti između 2007. i 2015. godine, nakon čega veće vrijednosti bilježi turizam .Ukupno gledajući, može se reći da oba sektora u prosjeku ostvaruju podjednake razine dodane vrijednosti u odnosu na ukupne prihode, ali i da turizam pokazuje znatno veću volatilnost.
 
 
-Analiza heterogenosti poslovnih subjekata iz pojedinih sektora može pružiti dodatan uvid o naravi promjena ekonomske strukture u RH. Ovdje ćemo se fokusirati ne jedan aspekt heterogenosti - koncetracija osnovnih varijbli. Koncetraciju ćemo računati kao udio prihoda, izvoza, dodane vrijednosti i ukupnim prihoda za 99% i 95% poslovnih subjekata sa najvećim udjelom istih vrijabli. Izračun je rađen samo za 2019. godinu.
+Analiza heterogenosti poslovnih subjekata iz pojedinih sektora može pružiti dodatan uvid o naravi promjena ekonomske strukture u RH. Ovdje ćemo se fokusirati ne jedan aspekt heterogenosti - koncentracija osnovnih varijabli. Koncentraciju ćemo računati kao udio prihoda, izvoza, dodane vrijednosti i ukupnim prihoda za 99% i 95% poslovnih subjekata sa najvećim udjelom istih varijabli. Izračun je rađen samo za 2019. godinu.
 
 ```{r}
 gfi_conc <- gfi_sample_turizam_prog[, .(subjectid, reportyear, djelatnosti, Export, Prihod, 
@@ -629,10 +623,13 @@ concetration[, velik := fcase(velik, "velik", !velik, "mali")]
 
 # tablica
 # concetration[, Kriterij := paste0(tip, "_", velik)]
-dcast(concetration, formula = djelatnosti ~ tip + velik, value.var = "udio", fun = sum)
+tbl_ <- dcast(concetration, formula = djelatnosti ~ tip + velik, value.var = "udio", fun = sum)
+cols <- colnames(tbl_)[grep("mali", colnames(tbl_))]
+tbl_ <- tbl_[, .SD, .SDcols = !cols]
+kableExtra::kable(tbl_)
 ```
 
-Kod doane vrijednosti, programiranje i turizam ostvaruju sličnu koncetraciju: oko 5% najvećih poduzeća po dodanoj vrijednosti generira 21% dodane vrijednosti. Kod zaposlenosti i ukupnih prihoda se vrijednosti također ne razlikuju značajno. Kod izvoza ipak postoji značajan razlika. Prvo treba primjetiti da je izvoz snažno koncetriran kod obje djelatnosti. Kod turizma, 1% poduzeća poduzeća koje najviše izvoze generiraju 95% ukupnog izvoza, dok je kod programiranja raj broj 67%. Ako se gleda 5% poduzeća koje najviše izvoze, kod turizma je ta brojka 99%, a kod programiranja 95%. Visoka koncetriranost izvoza je stilizirana činjenica u međunarodnoj trgovini.
+Kod dodane vrijednosti, programiranje i turizam ostvaruju sličnu koncentraciju: oko 5% najvećih poduzeća po dodanoj vrijednosti generira 21% dodane vrijednosti. Kod zaposlenosti i ukupnih prihoda se vrijednosti također ne razlikuju značajno. Kod izvoza ipak postoji značajan razlika. Prvo treba primijetiti da je izvoz snažno koncentriran kod obje djelatnosti. Kod turizma, 1% poduzeća poduzeća koje najviše izvoze generiraju 95% ukupnog izvoza, dok je kod programiranja raj broj 67%. Ako se gleda 5% poduzeća koje najviše izvoze, kod turizma je ta brojka 99%, a kod programiranja 95%. Visoka koncentriranost izvoza je stilizirana činjenica u međunarodnoj trgovini.
 
 
 
