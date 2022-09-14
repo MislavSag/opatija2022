@@ -1,12 +1,17 @@
 ---
-title: "opatija2022"
+title: "Struktura i dinamika privrednih djelatnosti u Hrvatskoj"
 author:
   - name: Josip Tica
     orcid: https://orcid.org/0000-0001-7937-1573
-format: docx
+format: 
+  docx:
+    fig-width: 9
+    fig-height: 10
 execute:
   echo: false
   warning: false
+crossref:
+  fig-title: Slika   # (default is "Figure")
 ---
 
 ```{r}
@@ -14,19 +19,19 @@ execute:
 
 # install packages if not already installed
 if (!is.element("DBI", installed.packages()[,1])) 
-  install.packages(p, dep = TRUE)
+  install.packages("DBI", dep = TRUE)
 if (!is.element("RMySQL", installed.packages()[,1])) 
-  install.packages(p, dep = TRUE)
+  install.packages("RMySQL", dep = TRUE)
 if (!is.element("data.table", installed.packages()[,1])) 
-  install.packages(p, dep = TRUE)
+  install.packages("ggplot2", dep = TRUE)
 if (!is.element("ggplot2", installed.packages()[,1])) 
-  install.packages(p, dep = TRUE)
-if (!is.element("dplyr", installed.packages()[,1])) 
-  install.packages(p, dep = TRUE)
+  install.packages("ggplot2", dep = TRUE)
 if (!is.element("patchwork", installed.packages()[,1])) 
-  install.packages(p, dep = TRUE)
+  install.packages("patchwork", dep = TRUE)
 if (!is.element("readxl", installed.packages()[,1])) 
-  install.packages(p, dep = TRUE)
+  install.packages("readxl", dep = TRUE)
+if (!is.element("ggrepel", installed.packages()[,1])) 
+  install.packages("ggrepel", dep = TRUE)
 
 # import packages
 library(DBI)        # paket za povezivanje s bazom podataka
@@ -35,6 +40,7 @@ library(data.table) # data wrangling
 library(dplyr)      # data wrangling
 library(ggplot2)    # vizualizacija
 library(patchwork)  # vizualizacija
+library(ggrepel)    # vizualizacija
 library(readxl)     # ucitavanje excel file-ova
 ```
 
@@ -73,12 +79,14 @@ q <- sprintf("SELECT b335/1000000000 AS Export,
                      b003/1000000000 AS Nematerijalna,
                      b110/1000000000 AS Prihod,
                      b119/1000000000 AS Placa,
-                     b147/1000000000 AS Nett,
+                     b147/1000000000 AS GrossProfit,
+                     b151/1000000000 AS NetProfit,
                      b329/1000000000 AS Grants,
                      b123/1000000000 AS Amortizacija,
+                     b150/1000000000 AS Porez,
                      (b003 + b010)/ 1000000000 AS MatNematmovina,
                      (b084 + b094)/ 1000000000 AS Dug,
-                     (b130 - 136) / 1000000000 AS NetoFin,
+                     (b136 - 130) / 1000000000 AS NetoFin,
                      reportyear, subjectid, employeecounteop, foreigncontrol,
                      nacerev21, nacerev22, nacerev23, nacerev24, countyid, 
                      municipalityid
@@ -105,7 +113,8 @@ theme_opatija <- function() {
       legend.title = element_blank(),
       
       # x axis
-      axis.title.x=element_blank()
+      axis.title.x = element_blank(),
+      axis.text = element_text(size = 11)
     )
 }
 ```
@@ -118,9 +127,9 @@ U ovom se radu analizira strukturna promjena proizvodnih sektora na agregatnoj r
 
 Nakon 90-ih godina do danas tercijarizacija postaje dominantan čimbenik promjene u strukturi privrednih djelatnosti. Tercijarizacija označava strukturnu promjenu u gospodarstvu u kojoj uslužne djelatnosti povećavaju razmjernu važnost u agregatnoj strukturi gospodarstva. Iako predmet interdisciplinarnog interesa, tercijarizacijskim procesom se prvenstveno bavi ekonomska literatura koja potvrđuje kako moderni gospodarski razvoj podrazumijeva smanjenje udjela *outputa* primarnih i sekundarnih djelatnosti, odnosno da tercijarne djelatnosti apsorbiraju radnu snagu iz primarnih i sekundarnih djelatnosti, zapošljavajući je s većom proizvodnošću što rezultira rastom proizvodnog outputa i općenito, gospodarskim rastom i razvojem.
 
-Ekonomska literatura naglašava brojne druge aspekte tercijarizacijskog procesa: relativno nižu produktivnost uslužnog sektora u odnosu na proizvodni (Krüger, 2008), postojanje značajnih unutarsektorskih razlika u tehnološkim kapacitetima, produktivnosti i obilježjima radne snage (Pillat and Wolf, 2005), važnost geografskih faktora (Herrendorf et al., 2014), značajne razlike u procesu tercijarizacije između razvijenih zemalja i zemalja u razvoju i dr. Upravo su specifičnosti procesa tercijarizacije u tranzicijskim i zemljama u razvoju te nedostatak istraživanja u domaćoj literaturi motivi za dublju analizu ovog procesa u Hrvatskoj. Istraživanje polazi od specifičnosti procesa tercijarizacije u hrvatskom gospodarstvu tijekom zadnja dva desetljeća. Te se specifičnosti odnose se na povijesne, institucionalne i političke karakteristike domaće ekonomije, tranzicijsko razdoblje obilježeno ratnim zbivanjima, zakašnjelo uključivanje u globalne financijske tokove, zakašnjelo pristupanje
+Ekonomska literatura naglašava brojne druge aspekte tercijarizacijskog procesa: relativno nižu produktivnost uslužnog sektora u odnosu na proizvodni (Krüger, 2008), postojanje značajnih unutarsektorskih razlika u tehnološkim kapacitetima, produktivnosti i obilježjima radne snage (Pillat and Wolf, 2005), važnost geografskih faktora (Herrendorf et al., 2014), značajne razlike u procesu tercijarizacije između razvijenih zemalja i zemalja u razvoju i dr. Upravo su specifičnosti procesa tercijarizacije u tranzicijskim i zemljama u razvoju te nedostatak istraživanja u domaćoj literaturi motivi za dublju analizu ovog procesa u Hrvatskoj. Te se specifičnosti odnose se na povijesne, institucionalne i političke karakteristike domaće ekonomije, tranzicijsko razdoblje obilježeno ratnim zbivanjima, zakašnjelo uključivanje u globalne financijske tokove, zakašnjelo pristupanje u EU i dr.
 
-Posebna važnost se usmjeruje analizi dva uslužna sektora - turizma i programiranja. Dok je turizam već dugo prepoznat kao strateška indsutrija s zahtjevanim visokim investicijama javnog sektora, programiranje tek dolazi u fokus ekonomske politike u RH. U radu analiziramo ključne varijable za oba sektora (produktivnost, dodanu vrijednost, neto izvoz, neto marže) te analizom trenda i dinamike varijabli procjenjujemo očekivani budući trend rasta ovih sektora.
+Osim pregleda strukture i dinamike na razini privrednih djelatnosti, ovo se istraživanje fokusira na dva uslužna podsektora - turizma i programiranja. Dok je turizam već dugo prepoznat kao strateška indsutrija s zahtjevanim visokim investicijama javnog sektora, programiranje tek nedavno dolazi u fokus ekonomske politike u RH. U radu se stoga istražuju pokazatelji produktivnosti, dodane vrijednosti, neto izvoza i profitabilnosti poslovanja na razini privrednih djelatnosti i u navedenim podsektorima uslužnih djelatnosti.
 
 ## Pregled literature
 
@@ -142,9 +151,14 @@ Ovo će istraživanje, uz prethodno navedene, obuhvatiti i druge, dimenzije proc
 
 Glavni izvor kvantitativnih sekundarnih podataka su: popisi stanovništva Hrvatske i računovodstveno-financijski izvještaji (bilanca, račun dobiti i gubitka, procijenjeni izvještaj o novčanom toku) i dodatnih izvještaja (dodatni podaci financijskog izvještaja poduzetnika -- obrazac POD-DOP), na godišnjoj razinii na temelju kojih će se deskriptivno i statistički analizirati struktura i dinamika u sektorima privrednih djelatnosti. Godišnji izvještaji uključuju sva trgovačka društva (društva s ograničenom odgovornošću i dionička društva), obrte koji su po zakonu dužni izrađivati i predavati financijska izvješća mjerodavnim institucijama i zadružna poduzeća. Svi su financijski izvještaji nekonsolidirani.
 
+U radu se koriste i računovodstveni pokazatelji:
+- Dodana vrijednost - računa se prema dohodovnom pristupu kao zbroj bruto dobiti, troškova osoblja, neto financijskih rashoda i amortizacije.
+- Neto marža - jednaka je omjeru neto dobiti i ukupnih prihoda.
+- Produktivnost - kao mjera produktivnosti koristi se produktivnost rada, koja se računa kao odnos ukupnih troškova osoblja i dodane vrijednosti.
+
 ## Struktura i dinamika ekonomske strukture
 
-U literaturi je prikazano da ekonomsku strukturu na agregatnoj razini objašnjava dinamika sljedećih sektora:
+Strukturu gospodarstva na razini proizvodnih djelatnosti sačinjavaju sektori i podsektori:
 
 1.  primarni sektor: A
 2.  sekundarni sektor: B, C, D i E,
@@ -152,10 +166,13 @@ U literaturi je prikazano da ekonomsku strukturu na agregatnoj razini objašnjav
 4.  kvartarni sektor: K, L, M i N,
 5.  kvintarni sektori O, P, Q, S i I.
 
-Udio pojedinog sektora u ukupnoj ekonomskoj strukturi može se analizirati pomoću različitih varijabli. U prvom dijelu analize, kod analize svih sektora, koristit ćemo 4 varijable: zaposlenost, ukupni prihodi, dodana vrijednost i izvoz. 
+Pri tome se kvartarni i kvintarni sektori smatraju djelom tercijarnog sektora.
 
+## Prikaz na razini privrednih sektora
 
-``` {r}
+Udio pojedinog sektora u ukupnoj ekonomskoj strukturi može se analizirati na različite načine. U prvom dijelu analize, daje se prikaz na razini privrednih djelatnosti (5 sektora) 4 varijable: zaposlenost, ukupni prihodi, dodanu vrijednost i izvoz.
+
+```{r}
 # zupanije
 geo1 <- unique(opcine[, .(ZUPANIJA, NAZIV_ZUP)]) 
 geo2 <- unique(opcine[, .(OPCINA, NAZIV_OPC)])
@@ -164,10 +181,12 @@ geo2 <- unique(opcine[, .(OPCINA, NAZIV_OPC)])
 ekonomska_struktura <- gfi[, djelatnosti := fcase(
   nacerev21 == "A", "primarne",
   nacerev21 %in% c("B", "C", "D", "E", "F"), "sekundarne",
-  nacerev21 %in% c("G", "H", "I", "J"), "tecijarne",
+  nacerev21 %in% c("G", "H", "I", "J"), "tercijarne",
   nacerev21 %in% c("K", "L", "M", "N"), "kvartarne",
   nacerev21 %in% c("O", "P", "Q", "R", "S", "T"), "kvintarne"
 )]
+level_orders <- c("primarne", "sekundarne", "tercijarne", "kvartarne", "kvintarne")
+ekonomska_struktura[, djelatnosti := factor(djelatnosti, levels = level_orders)]
 zupanije <- ekonomska_struktura[reportyear == 2019]
 zupanije <- zupanije[, .(n = n_distinct(subjectid), 
                          prihod = sum(Prihod, na.rm = TRUE),
@@ -177,7 +196,7 @@ zupanije <- zupanije[, .(n = n_distinct(subjectid),
                          trPlaca = sum(Placa, na.rm = TRUE),
                          amortizacija = sum(Amortizacija , na.rm = TRUE),
                          net_fin_prihodi = sum(NetoFin , na.rm = TRUE),
-                         nett = sum(Nett, na.rm = TRUE),
+                         nett = sum(GrossProfit, na.rm = TRUE),
                          dug = sum(Dug, na.rm = TRUE),
                          imovina = sum(MatNematmovina, na.rm = TRUE)), 
                      by = .(djelatnosti, countyid, municipalityid)]
@@ -189,14 +208,12 @@ zupanije <- zupanije[, .(djelatnosti, n, prihod, izvoz, uvoz, dv, NAZIV_ZUP, NAZ
 zupanije <- na.omit(zupanije)
 ```
 
-
 ```{r}
-#| label: ek-din-rh
-
 # prepare data for graph
 struktura_rh <- na.omit(ekonomska_struktura[, .(reportyear, djelatnosti, Prihod,
                                                 Export, Placa, Amortizacija,
-                                                NetoFin, Nett, employeecounteop)])
+                                                NetoFin, GrossProfit, employeecounteop)])
+
 
 # ekonomska struktura prihodi
 struktura_rh_prihodi <- struktura_rh[, .(Prihodi = sum(Prihod)), 
@@ -209,11 +226,13 @@ struktura_rh_prihodi <- struktura_rh[, .(Prihodi = sum(Prihod)),
 g1 <- ggplot(struktura_rh_prihodi, 
                     aes(reportyear, Prihodi, fill = djelatnosti)) +
   geom_bar(stat = "identity") +
+  scale_fill_grey(start = 0, end = 0.8) +
+  labs(y = "Prihodi (mlrd. KN)") +
   theme_opatija()
 
 # ekonomska struktura dv  
 struktura_rh_dv <- copy(struktura_rh)
-struktura_rh_dv[, dv := Placa + Nett + Amortizacija + NetoFin]
+struktura_rh_dv[, dv := Placa + GrossProfit + Amortizacija + NetoFin]
 struktura_rh_dv <- struktura_rh_dv[dv > -100] # remove outlier !
 struktura_rh_dv <- struktura_rh_dv[, .(`Dodana vrijednost` = sum(dv)),
                                    by = .(reportyear, djelatnosti)]
@@ -227,6 +246,8 @@ test_2 <- struktura_rh_dv[reportyear == 2019, .(djelantosti = djelatnosti,
 g2 <- ggplot(struktura_rh_dv, aes(reportyear, `Dodana vrijednost`, 
                                   fill = djelatnosti)) +
   geom_bar(stat = "identity") +
+  scale_fill_grey(start = 0, end = 0.8) +
+  labs(y = "Dodana vrij. (mlrd. KN)") +
   theme_opatija()
 
 # ekonomska struktura izvoz
@@ -239,73 +260,75 @@ test_2 <- struktura_rh_izvoz[reportyear == 2019, .(djelantosti = djelatnosti,
 # cbind(test_1, test_2)
 g3 <- ggplot(struktura_rh_izvoz, aes(reportyear, Izvoz, fill = djelatnosti)) +
   geom_bar(stat = "identity") +
+  scale_fill_grey(start = 0, end = 0.8) +
+  labs(y = "Izvoz (mlrd. KN)") +
   theme_opatija()
 
 # ekonomska struktura zaposlenost
-struktura_rh_zap <- struktura_rh[, .(Zaposlenost = sum(employeecounteop)),
+struktura_rh_zap <- struktura_rh[, .(Zaposlenost = sum(employeecounteop) / 1000),
                                  by = .(reportyear, djelatnosti)]
 g4 <- ggplot(struktura_rh_zap, aes(reportyear, Zaposlenost, fill = djelatnosti)) +
   geom_bar(stat = "identity") +
+  scale_fill_grey(start = 0, end = 0.8) +
+  labs(y = "Zaposlenost (000)") +
   theme_opatija()
 
 ```
 
-
 ```{r}
+#| label: fig-ekonomska-struktura
+#| fig-cap: 'Ekonomska struktura u RH za razdoblje 2000-2019'
+
 (g1 + g2) / (g3 + g4) + 
-  plot_layout(guides = "collect") +
-  plot_annotation(
-    title = 'Ekonomska struktura u RH za razdoblje 2000-2019',
-    # subtitle = 'These 3 plots will reveal yet-untold secrets about our beloved data-set',
-    caption = 'Ekonomsku strukturu čine sljedeće sketori: primarni, sekundarni, tercijarni, kvartarni, kvintarni. sve vriejdnosti su prikazane u milijardama kuna, osim zaposlenosti, koja označava broj zaposlenosti prema satima rada.'
-) & theme(legend.position = 'bottom')
+  plot_layout(guides = "collect") & theme(legend.position = 'bottom')
 ```
 
-Analizu započinjemo analizom ekonomske strukture prema svakoj varijabli. Kao kriteriji za analizu sektorskih udjela korišteni su: ukupni prihod, dodana vrijednost, zaposlenost i izvoz. Ako se kao kriterij koristi ukupni prihod, vidljivo je da u ekonomskoj strukturi najveći udio imaju sekundarni i tercijarni sektor. Slijedi kvartarni sektor, dok ostali (primarni i kvintarni) imaju vrlo niske udjele. Na početku razdoblja (2000.), najveći udio ima tercijarni sektor (47%) slijedi sekundarni sektor sa 43%, kvartarni sa 6%, primarni 3% i kvintarni 1%. Na kraju razdoblja (2019 godina), udjeli su sljedeći: tercijarni sektor čini 49% udjela, sekundarni 38% udjela kvartarni 8%, primarni 3% i kvintarni 2%. Može se dakle zaključiti je u 20 godina tercijarni sektor blago povećao svoj udjel i postao najveći sektor po udjelu ukupnih prihoda u ukupnim prihodima svih djelatnosti. Drugi najveći je sekundarno sektor, ali ima sve manji udio kroz vrijeme. Kvartarni i kvintarni sektor rastu, dok primarni stagnira.
+Kao kriteriji za analizu sektorskih udjela korišteni su: ukupni prihod, dodana vrijednost, zaposlenost i izvoz. Ako se kao kriterij koristi ukupni prihod, vidljivo je da u ekonomskoj strukturi najveći udio imaju sekundarni i tercijarni sektor. Slijedi kvartarni sektor, dok ostali (primarni i kvintarni) imaju vrlo niske udjele. Na početku razdoblja (2000.), najveći udio ima tercijarni sektor (47%) slijedi sekundarni sektor sa 43%, kvartarni sa 6%, primarni 3% i kvintarni 1%. Na kraju razdoblja (2019 godina), udjeli su sljedeći: tercijarni sektor čini 49% udjela, sekundarni 38% udjela kvartarni 8%, primarni 3% i kvintarni 2%. Moguće je zaključiti kako je u 20 godina tercijarni sektor blago povećao svoj udjel i postao najveći sektor po udjelu ukupnih prihoda u ukupnim prihodima svih djelatnosti. Drugi najveći je sekundarni sektor, ali ima sve manji udio kroz vrijeme. Kvartarni i kvintarni sektor rastu, dok primarni stagnira.
 
-Raščlanjivanje ekonomske strukture po dodanoj vrijednosti daje sličnu dinamiku, lai različite vrijednosti udjela. Na početku razdoblja prednjači sekundarni sektor sa 52% udjela, a slijede tercijarni sa 35% i kvartarni sa 10%. Na kraju razdoblja sekundarni sektor gubi na značaju i čini 38%, a tercijarni sektor ga prestiže i čini 40% udjela. Kvartarni dobiva na značenju i čini 14% udjela. Isto kao i kvintarni koji raste sa 1% na 4%. Ukratko, prema kriteriju dodane vrijednosti tercijarni sektor prestiže sekundarni i postaje dominantni sektor u RH. Sekundarni sektor gubi na veličini, ali još uvijek ima veliki udio.
+Raščlanjivanje ekonomske strukture po dodanoj vrijednosti prati sličnu dinamiku, ali pokazuje različite vrijednosti udjela. Na početku razdoblja prednjači sekundarni sektor sa 52% udjela, a slijede tercijarni sa 35% i kvartarni sa 10%. Na kraju razdoblja sekundarni sektor gubi na značaju i čini 38%, a tercijarni sektor ga prestiže i čini 40% udjela. Kvartarni dobiva na značenju i čini 14% udjela. Isto kao i kvintarni koji raste sa 1% na 4%. Ukratko, prema kriteriju dodane vrijednosti tercijarni sektor prestiže sekundarni i postaje dominantni sektor u RH. Sekundarni sektor gubi na veličini, ali još uvijek ima veliki udio.
 
-Pram kriteriju zaposlenosti, nalazi su isti kao i kod dodane vrijednosti, pa nije potrebna detaljnija analiza. Međutim za varijablu izvoza su rezultate i nešto drugačiji. Na početku razdoblja (2000. godina), sekundarni sektor ima najveći udio izvoza, čak 70%. Slijedi tercijarni sektor sa 25%, kvartarni sektor sa 4%, dok primarni i kvintarni zajedno čine 1%. Na kraju razdoblja, udio izvoza sekundarnog sektora pada na 55%, tercijarni sektor sve više izvozi, pa raste do 33%, kvartarni također raste, na 8%, dok ostali stagniraju. Sekundarni sektor dakle čini glavninu izvoza, ali ga sve više zamjenjuju tercijarni i kvartarni sektor.
+Prema kriteriju zaposlenosti, nalazi su isti kao i kod dodane vrijednosti. Međutim, za varijablu izvoza su rezultati nešto drugačiji. Na početku razdoblja (2000. godina), sekundarni sektor ima najveći udio izvoza, čak 70%. Slijedi tercijarni sektor sa 25%, kvartarni sektor sa 4%, dok primarni i kvintarni zajedno čine 1%. Na kraju razdoblja, udio izvoza sekundarnog sektora pada na 55%, tercijarni sektor sve više izvozi i raste do 33%, kvartarni također raste, na 8%, dok ostali stagniraju. Sekundarni sektor dakle čini glavninu izvoza, ali ga sve više zamjenjuju tercijarni i kvartarni sektor.
 
 ```{r}
+#| label: fig-ekonomska-struktura-zup
+#| fig-cap: 'Ekonomska struktura u RH po županijama za razdoblje 2000-2019'
+
 # prihodi
 g1 <- ggplot(zupanije, aes(x = NAZIV_ZUP, y = prihod, fill = djelatnosti)) +
   geom_bar(stat = "identity", position = "fill") +
   coord_flip() +
+  scale_fill_grey(start = 0, end = 0.8) +
   theme_opatija() +
   theme(axis.title.y = element_blank(),
-        axis.title.x = element_text(size = 8),
-                axis.text.x = element_blank(),
-        axis.text.y = element_text(size = 5)) +
+        axis.title.x = element_text(size = 10),
+        axis.text.x = element_blank(),
+        axis.text.y = element_text(size = 8)) +
   ylab("Udio u ukupnim prihodima")
-  
+
 # izvoz
 g2 <- ggplot(zupanije, aes(x = NAZIV_ZUP, y = izvoz, fill = djelatnosti)) +
   geom_bar(stat = "identity", position = "fill") +
   coord_flip() +
+  scale_fill_grey(start = 0, end = 0.8) +
   theme_opatija() +
   theme(axis.title.y = element_blank(),
-        axis.title.x = element_text(size = 8),
-        axis.text.y = element_text(size = 5)) +
+        axis.title.x = element_text(size = 10),
+        axis.text.y = element_text(size = 8)) +
   ylab("Udio u izvozu")
 
-
-g1 / g2 + 
-  plot_layout(guides = "collect") +
-  plot_annotation(
-    title = 'Ekonomska struktura u RH po županijama u 2019. godini',
-    # subtitle = 'These 3 plots will reveal yet-untold secrets about our beloved data-set',
-    caption = 'Ekonomsku strukturu čine sljedeće sketori: primarni, sekundarni, tercijarni, kvartarni, kvintarni.'
-) & theme(legend.position = 'bottom')
+g1 / g2 + plot_layout(guides = "collect") & theme(legend.position = 'bottom')
 ```
 
-Na slici xx. prikazujemo ekonomsku strukturu prema geografskim obilježjima. Budući da zaposlenost, ukupni prihodi i dodana vrijednost ima sličnu dinamiku, koristimo dvije varijable - ukupne prihode i izvoz. Umjesto vremenske dimenzije pogled usmjerava na raspodjelu vrijednosti po županijama. Svi grafikoni se odnose na vrijednosti u 2019. godini. Gornji grafikon prikazuje udio pojedinog sektora (primarni, sekundarni, tercijarni, kvartarni, kvintarni) u ekonomskoj strukturi za svaku županiju. Mogu se uočiti značajne razlike po županijama. Na primjer, najveći udio tercijarnih djelatnosti prema ukupnom prihodu imaju zagrebačka i dubrovačko-neretvanska županija. Međimurska i osječko-baranjska imaju najveći udio sekundarnog sektora. Iz grafa se može indicirati i korelacija između udjela tercijarnog sektora i razvijenosti županije.
+Na slici [-@fig-ekonomska-struktura-zup] je prikazana ekonomska struktura prema geografskim obilježjima. Budući da zaposlenost, ukupni prihodi i dodana vrijednost imaju sličnu dinamiku, razmatraju se dva pokazatelja - ukupni prihodi i izvoz. Grafikoni se odnose na prostornu raspodjelu vrijednosti po županijama u 2019. godini. Gornji grafikon prikazuje udio pojedinog sektora (primarni, sekundarni, tercijarni, kvartarni, kvintarni) u ekonomskoj strukturi za svaku županiju i upućuje na postojanje značajnih razlika po županijama. Na primjer, najveći udio tercijarnih djelatnosti prema ukupnom prihodu imaju zagrebačka i dubrovačko-neretvanska županija. Međimurska i osječko-baranjska imaju najveći udio sekundarnog sektora. Slika upućuje i na postojanje korelacije između udjela tercijarnog sektora i razvijenosti županije.
 
-Donji dio slike prikazuje ekonomsku strukturu prema udjelu izvoza u svakom sektoru, u 2019. godini. Kao neobična stavka pojavljuje se dubrovačko-neretvanska županija. Pretpostavljamo da je glavni razlog veliki udio turizma, koji čini oko 70% izvoza. Slična je interpretacija i za istarsku županiju. S druge strane neke županije glavninu izvoza ostvaruju u sekundarnom sektoru. Primjer je virovitičko-podravska i vukovarsko-srijemska županija. Može se zaključiti da kod udjela izvoza postoje još veće geografske razlike u ekonomskoj strukturi.
+Donji dio slike prikazuje ekonomsku strukturu prema udjelu izvoza u svakom sektoru, u 2019. godini. Posebno valja primijetiti dubrovačko-neretvansku županiju u kojoj zbog velikog značaja turizma, tercijarni sektor ostvaruje 70% izvoza. Slična je interpretacija i za istarsku županiju. S druge strane, neke županije glavninu izvoza ostvaruju u sekundarnom sektoru poput virovitičko-podravske i vukovarsko-srijemske . Može se zaključiti da kod vanjskotrgovinske aktivnosti postoje jznačajne geografske razlike u strukturi privrednih djelatnosti.
 
+## Prikaz na razini tercijarnog sektora
 
 ```{r}
-# ekonoksa struktura za tercijarni sektor
+
+# ekonomksa struktura za tercijarni sektor
+
 ekonomska_struktura <- gfi[, djelatnosti := fcase(
   nacerev21 == "G", "Trgovina",
   nacerev21 == "H", "Prijevoz",
@@ -316,10 +339,10 @@ ekonomska_struktura <- gfi[, djelatnosti := fcase(
 # prepare data for graph
 struktura_rh <- na.omit(ekonomska_struktura[, .(reportyear, djelatnosti, Prihod,
                                                 Export, Placa, Amortizacija,
-                                                NetoFin, Nett, employeecounteop)])
+                                                NetoFin, GrossProfit, employeecounteop)])
 
 # ekonomska struktura prihodi
-struktura_rh_prihodi <- struktura_rh[, .(Prihodi = sum(Prihod)), 
+struktura_rh_prihodi <- struktura_rh[, .(Prihodi = sum(Prihod)),
                                      by = .(reportyear, djelatnosti)]
 # test_1 <-  struktura_rh_prihodi[reportyear == 2000, .(djelantosti = djelatnosti,
 #                                                  Prihodi_pct = Prihodi / sum(Prihodi))]
@@ -327,113 +350,121 @@ struktura_rh_prihodi <- struktura_rh[, .(Prihodi = sum(Prihod)),
 #                                            Prihodi_pct = Prihodi / sum(Prihodi))]
 # cbind(test_1 , test_2)
 
-g1 <- ggplot(struktura_rh_prihodi, 
+g1 <- ggplot(struktura_rh_prihodi,
                     aes(reportyear, Prihodi, fill = djelatnosti)) +
   geom_bar(stat = "identity") +
+  scale_fill_grey(start = 0, end = 0.8) +
+  labs(y = "Prihodi (mlrd. KN)") +
   theme_opatija()
 
-# ekonomska struktura dv  
+# ekonomska struktura dv
 struktura_rh_dv <- copy(struktura_rh)
-struktura_rh_dv[, dv := Placa + Nett + Amortizacija + NetoFin]
+struktura_rh_dv[, dv := Placa + GrossProfit + Amortizacija + NetoFin]
 struktura_rh_dv <- struktura_rh_dv[dv > -100] # remove outlier !
 struktura_rh_dv <- struktura_rh_dv[, .(`Dodana vrijednost` = sum(dv)),
                                    by = .(reportyear, djelatnosti)]
-
 test_1 <- struktura_rh_dv[reportyear == 2000, .(djelantosti = djelatnosti,
                                                  dv_pct = `Dodana vrijednost` / sum(`Dodana vrijednost`))]
 test_2 <- struktura_rh_dv[reportyear == 2019, .(djelantosti = djelatnosti,
                                                  dv_pct = `Dodana vrijednost` / sum(`Dodana vrijednost`))]
 # cbind(test_1, test_2)
 
-g2 <- ggplot(struktura_rh_dv, aes(reportyear, `Dodana vrijednost`, 
+g2 <- ggplot(struktura_rh_dv, aes(reportyear, `Dodana vrijednost`,
                                   fill = djelatnosti)) +
   geom_bar(stat = "identity") +
+  labs(y = "Dodana vrij. (mlrd. KN)") +
+  scale_fill_grey(start = 0, end = 0.8) +
   theme_opatija()
 
 # ekonomska struktura izvoz
-struktura_rh_izvoz <- struktura_rh[, .(Izvoz = sum(Export)), 
+struktura_rh_izvoz <- struktura_rh[, .(Izvoz = sum(Export)),
                                    by = .(reportyear, djelatnosti)]
 test_1 <- struktura_rh_izvoz[reportyear == 2000, .(djelantosti = djelatnosti,
                                                  dv_pct = Izvoz / sum(Izvoz))]
 test_2 <- struktura_rh_izvoz[reportyear == 2019, .(djelantosti = djelatnosti,
                                                  dv_pct = Izvoz / sum(Izvoz))]
 # cbind(test_1, test_2)
+
 g3 <- ggplot(struktura_rh_izvoz, aes(reportyear, Izvoz, fill = djelatnosti)) +
   geom_bar(stat = "identity") +
+  scale_fill_grey(start = 0, end = 0.8) +
+  labs(y = "Izvoz (mlrd. KN)") +
   theme_opatija()
 
 # ekonomska struktura zaposlenost
-struktura_rh_zap <- struktura_rh[, .(Zaposlenost = sum(employeecounteop)),
+struktura_rh_zap <- struktura_rh[, .(Zaposlenost = sum(employeecounteop) / 1000),
                                  by = .(reportyear, djelatnosti)]
 g4 <- ggplot(struktura_rh_zap, aes(reportyear, Zaposlenost, fill = djelatnosti)) +
   geom_bar(stat = "identity") +
+  scale_fill_grey(start = 0, end = 0.8) +
+  labs(y = "Zaposlenost (000)") +
   theme_opatija()
 ```
 
 ```{r}
-(g1 + g2) / (g3 + g4) + 
-  plot_layout(guides = "collect") +
-  plot_annotation(
-    title = 'Ekonomska struktura u RH za razdoblje 2000-2019',
-    # subtitle = 'These 3 plots will reveal yet-untold secrets about our beloved data-set',
-    caption = 'Ekonomsku strukturu čine sljedeće sketori: primarni, sekundarni, tercijarni, kvartarni, kvintarni. sve vriejdnosti su prikazane u milijardama kuna, osim zaposlenosti, koja označava broj zaposlenosti prema satima rada.'
-) & theme(legend.position = 'bottom')
+#| label: fig-struktura-tercijarni
+#| fig-cap: 'Struktura tercijarnog sektora u RH za razdoblje 2000-2019'
+
+(g1 + g2) / (g3 + g4) +
+  plot_layout(guides = "collect") & theme(legend.position = 'bottom')
 ```
 
-Dosadašnja analiza je potvrdila sve veću važnost tercijarnog sektora u ekonomskoj strukturi s jedne strane, te indicirala povezanost ekonomske razvijenosti pojedinih županije i udjela tercijarnog sektora s druge strane. Zbog važnosti ovog sektora, u nastavku detaljnije analiziramo tercijarni sektor. Prvo prikazujemo ekonomsku strukturu tercijarnog sektora prema istom obrascu - prikazujemo strukturu prema dodanoj vrijednosti, zaposlenosti, izvozu i ukupnom prohodu. U sljedećem poglavlju se posebno fokusiramo na sektor turizma i programiranja.
+Dosadašnja analiza je potvrdila rastuću važnost tercijarnog sektora u ekonomskoj strukturi s jedne strane, te ukazala na vezu ekonomske razvijenosti pojedinih županije i udjela tercijarnog sektora s druge strane. Zbog važnosti tercijarnog sektora, u nastavku se detaljnije analizira njegova unutarsektorska struktura i dinamika. Prvo je prikazana ekonomska struktura tercijarnog sektora prema dodanoj vrijednosti, zaposlenosti, izvozu i ukupnom prohodu, a nakon toga su detaljnije analizirani podsektori turizma i programiranja.
 
-Slika xx. prikazuje dinamiku ekonomske strukture tercijarnog sektora. Prema svim varijablama, sektor trgovine čini najveći udio. Međutim dinamika pokazuje da ostali sektori poprimaju sve važniju ulogu. Prema udjelu dodane vrijednosti sektor trgovine pada sa 75% dodane vrijednosti na 72%. Raste sektor smještaja s 4% na 8%, dok ostali sektori ostaju nepromijenjeni. Ako se promatra izvoz, rezultati su ponovno drugačiji. Sektor trgovine čini sve veći udio izvoza, dok sektor prijevoza čini sve manji udio.
+Slika [-@fig-struktura-tercijarni] prikazuje unutarsektorsku dinamiku tercijarnog sektora. Prema svim varijablama, sektor trgovine čini najveći udio. Međutim, podatci pokazuju da ostali sektori poprimaju sve važniju ulogu. Prema udjelu dodane vrijednosti, u promatranom razdoblju sektor trgovine pada sa 75% dodane vrijednosti na 72%, sektor smještaja raste s 4% na 8%, dok ostali sektori ostaju nepromijenjeni. Prema kriteriju izvoza, trgovina čini sve veći udio izvoza, dok prijevoz čini sve manji udio.
 
+## Analiza ključnih izvoznih sektora
 
-## Sektor turizma i programiranja
+Prethodno prikazani podatci čine osnovu za detaljniju analizu strukture tercijarnog sektora, odnosno dva podsektora (druga NACEREV razina): turizma i programiranja i njegovu usporedbu sa prerađivačkim sektorom, kao najvećim sektorom prema NACEREV2007 djelatnostima. Turizam je ekonomska grana od strateškog značenja za RH. Ovdje valja istaknuti kako je prihode od turizma vrlo teško mjeriti jer postoje snažni efekti prelijevanja između turističkog i drugih sektora, a analizu dodatno otežava što znatan broj "malih" iznajmljivača ne predaje podatke o prihodima. U ovoj se analizi pod sektorom turizma podrazumijevaja sektor I - djelatnosti pružanja smještaja te pripreme i usluživanja hrane. Sektor programiranja nije grana od strateškog značenje za RH no pokazuje se kao izrazito bitan čimbenik domaćeg ekonomskog rasta. Sektor programiranja čine podsektori: 62 - Računalno programiranje, savjetovanje i djelatnosti povezane s njima i 63.1 - Obrada podataka, usluge poslužitelja i djelatnosti povezane s njima; internetski portali. Prerađivački sektor (NACEREV razina C) će se označavati kao "Industrija".
 
-Veći relativni udio usluga u BDP-u predstavlja stiliziranu činjenicu ekonomskog rata. Usluge imaju sve veću važnost u po svim makroekonomskim parametrima (BDP, zaposlenost, izvoz i dr.). Stoga u ovom poglavlju analiziramo detaljnije dva podsektora (druga NACEREV razina), sektora turizma i sektor programiranja. Razlog izbora turizma kao objekta promatranja je očit. Turizam je ekonomska grana od strateškog značenja za RH. Prihode od turizma je vrlo teško mjeriti[^1] jer postoje snažni efekti prelijevanja između turističkog i drugih sektora. Također, većina "malih" iznajmljivača ne predaje podatke o prihodima. U predmetnoj analizi se pod sektorom turizma označava sektor I - djelatnosti pružanja smještaja te pripreme i usluživanja hrane. Sektor programiranja čine sektori 62 - Računalno programiranje, savjetovanje i djelatnosti povezane s njima i 63.1 - Obrada podataka, usluge poslužitelja i djelatnosti povezane s njima; internetski portali.
 
 ```{r}
 # agregacija za sektor J i I data.table WAY
 gfi_sample_turizam_prog <- gfi[, djelatnosti := fcase(
   nacerev21 == "I", "Turizam",
   nacerev22 == "62", "Programiranje",
-  nacerev21 == "631", "Programiranje"
+  nacerev21 == "631", "Programiranje",
+  nacerev21 == "C", "Industrija"
 )]
 gfi_sample_turizam_prog <- na.omit(gfi_sample_turizam_prog, cols = "djelatnosti")
 
 # suiranje po sektoru
-gfi_turizam_prog <- gfi_sample_turizam_prog[, .(subjectid, reportyear, djelatnosti, 
-                                                Export, Import, Prihod, Placa, Nett, 
-                                                Zaposleni, Grants, NetoFin, 
-                                                Amortizacija)]
-gfi_turizam_prog <- gfi_turizam_prog[, lapply(.SD, sum), 
+gfi_turizam_prog <- gfi_sample_turizam_prog[djelatnosti != "Industrija"]
+gfi_turizam_prog <- gfi_sample_turizam_prog[, .(subjectid, reportyear, djelatnosti,
+                                                Export, Import, Prihod, Placa, GrossProfit,
+                                                Zaposleni, Grants, NetoFin, Porez,
+                                                Amortizacija, NetProfit)]
+gfi_turizam_prog <- gfi_turizam_prog[, lapply(.SD, sum),
                                      by = c("djelatnosti", "reportyear"),
-                                     .SDcols = c("Export", "Import", "Prihod", 
-                                                 "Placa", "Nett", "Zaposleni", 
-                                                 "Grants", "NetoFin", 
-                                                 "Amortizacija")]
+                                     .SDcols = c("Export", "Import", "Prihod",
+                                                 "Placa", "GrossProfit", "Zaposleni",
+                                                 "Grants", "NetoFin", "Porez",
+                                                 "Amortizacija", "NetProfit")]
 setorderv(gfi_turizam_prog, c("djelatnosti", "reportyear"))
 
 # racunanje varijabli
 gfi_turizam_prog[, `:=`(
-  DodanaVrijednost = Placa + Nett + NetoFin + Amortizacija,
-  NetoMarza = Nett / Prihod,
+  DodanaVrijednost = Placa + GrossProfit + NetoFin + Amortizacija,
+  NetoMarza = NetProfit / Prihod,
   IzvovPrihod = Export / Prihod,
-  Produktivnost = Placa / Zaposleni,
-  NetoIzvozPrihodi = (Export - Import) / Prihod
+  Produktivnost = (Placa * 1000000000) / Zaposleni,
+  NetoIzvozPrihodi = (Export - Import) / Prihod,
+  ProsjecnaPlaca = Placa * 1000000000 / Zaposleni,
+  SRZaposleni = Zaposleni / shift(Zaposleni) - 1
 )]
 gfi_turizam_prog[, DnvPrihodi := DodanaVrijednost / Prihod]
+gfi_turizam_prog[, SRdv := DodanaVrijednost / shift(DodanaVrijednost) - 1]
 ```
-
-
-[^1]: Here is the footnote.
-
 
 ```{r}
 # prepare data for graph
 struktura_rh <- na.omit(gfi_sample_turizam_prog[, .(reportyear, djelatnosti, Prihod,
                                                     Export, Placa, Amortizacija,
-                                                    NetoFin, Nett, employeecounteop)])
+                                                    NetoFin, GrossProfit, employeecounteop)])
+# struktura_rh <- struktura_rh[djelatnosti != "Industrija"]
 
 # ekonomska struktura prihodi
-struktura_rh_prihodi <- struktura_rh[, .(Prihodi = sum(Prihod)), 
+struktura_rh_prihodi <- struktura_rh[, .(Prihodi = sum(Prihod)),
                                      by = .(reportyear, djelatnosti)]
 test_1 <- struktura_rh_prihodi[reportyear == 2000, .(djelantosti = djelatnosti,
                                                  Prihodi_pct = Prihodi / sum(Prihodi))]
@@ -441,178 +472,289 @@ test_2 <- struktura_rh_prihodi[reportyear == 2019, .(djelantosti = djelatnosti,
                                            Prihodi_pct = Prihodi / sum(Prihodi))]
 # cbind(test_1, test_2)
 
-g1 <- ggplot(struktura_rh_prihodi, 
-                    aes(reportyear, Prihodi, fill = djelatnosti)) +
+g1 <- ggplot(struktura_rh_prihodi,
+             aes(reportyear, Prihodi, fill = djelatnosti)) +
   geom_bar(stat = "identity") +
+  scale_fill_grey(start = 0, end = 0.8) +
+  labs(y = "Prihodi (mlrd. KN)") +
   theme_opatija()
 
-# ekonomska struktura dv  
+# ekonomska struktura dv
 struktura_rh_dv <- copy(struktura_rh)
-struktura_rh_dv[, dv := Placa + Nett + Amortizacija + NetoFin]
+struktura_rh_dv[, dv := Placa + GrossProfit + Amortizacija + NetoFin]
 struktura_rh_dv <- struktura_rh_dv[dv > -100] # remove outlier !
 struktura_rh_dv <- struktura_rh_dv[, .(`Dodana vrijednost` = sum(dv)),
                                    by = .(reportyear, djelatnosti)]
-
 test_1 <- struktura_rh_dv[reportyear == 2000, .(djelantosti = djelatnosti,
                                                  dv_pct = `Dodana vrijednost` / sum(`Dodana vrijednost`))]
 test_2 <- struktura_rh_dv[reportyear == 2019, .(djelantosti = djelatnosti,
                                                  dv_pct = `Dodana vrijednost` / sum(`Dodana vrijednost`))]
 # cbind(test_1, test_2)
 
-g2 <- ggplot(struktura_rh_dv, aes(reportyear, `Dodana vrijednost`, 
+g2 <- ggplot(struktura_rh_dv, aes(reportyear, `Dodana vrijednost`,
                                   fill = djelatnosti)) +
   geom_bar(stat = "identity") +
+  scale_fill_grey(start = 0, end = 0.8) +
+  labs(y = "Dodana vrij. (mlrd. KN)") +
   theme_opatija()
 
 # ekonomska struktura izvoz
-struktura_rh_izvoz <- struktura_rh[, .(Izvoz = sum(Export)), 
+struktura_rh_izvoz <- struktura_rh[, .(Izvoz = sum(Export)),
                                    by = .(reportyear, djelatnosti)]
 test_1 <- struktura_rh_izvoz[reportyear == 2000, .(djelantosti = djelatnosti,
                                                  dv_pct = Izvoz / sum(Izvoz))]
 test_2 <- struktura_rh_izvoz[reportyear == 2019, .(djelantosti = djelatnosti,
                                                  dv_pct = Izvoz / sum(Izvoz))]
 # cbind(test_1, test_2)
+
 g3 <- ggplot(struktura_rh_izvoz, aes(reportyear, Izvoz, fill = djelatnosti)) +
   geom_bar(stat = "identity") +
+  scale_fill_grey(start = 0, end = 0.8) +
+  labs(y = "Izvoz (mlrd. KN)") +
   theme_opatija()
 
 # ekonomska struktura zaposlenost
-struktura_rh_zap <- struktura_rh[, .(Zaposlenost = sum(employeecounteop)),
+struktura_rh_zap <- struktura_rh[, .(Zaposlenost = sum(employeecounteop) / 1000),
                                  by = .(reportyear, djelatnosti)]
 g4 <- ggplot(struktura_rh_zap, aes(reportyear, Zaposlenost, fill = djelatnosti)) +
   geom_bar(stat = "identity") +
+  scale_fill_grey(start = 0, end = 0.8) +
+  labs(y = "Zaposlenost (000)") +
   theme_opatija()
 ```
 
 ```{r}
+#| label: fig-struktura-turizam-programiranje
+#| fig-cap: 'Ekonomska struktura sektora turizma i programiranja u RH za razdoblje 2000-2019'
+
 # ekonomska struktura programiranja i turizma
-(g1 + g2) / (g3 + g4) + 
-  plot_layout(guides = "collect") +
-  plot_annotation(
-    title = 'Ekonomska struktura u RH za razdoblje 2000-2019',
-    # subtitle = 'These 3 plots will reveal yet-untold secrets about our beloved data-set',
-    caption = 'Ekonomsku strukturu čine sljedeće sketori: primarni, sekundarni, tercijarni, kvartarni, kvintarni. sve vriejdnosti su prikazane u milijardama kuna, osim zaposlenosti, koja označava broj zaposlenosti prema satima rada.'
-) & theme(legend.position = 'bottom')
+(g1 + g2) / (g3 + g4) +
+  plot_layout(guides = "collect") & theme(legend.position = 'bottom')
+
 ```
 
-Analizu započinjemo analizom dinamike 4 osnovne varijable iz prethodnog poglavlja - dodana vrijednost, zaposlenost, ukupni prihod i izvoz. Rezultat je vidljiv na slici xx. Turizam ostvaruje mnogo veće vrijednosti kod svih promatranih varijabli, ali postoji jasan trend relativno veće važnosti programiranja. Primjerice, na početku razdoblja odnos ukupnih prihoda između turizma i programiranja iznosio je 1:5 (20% programiranje, 80% turizam), dok je na kraju razdoblja odnos 30% - 70%. Kod izvoza je promjena još naglašenija. Odnos je bio 88% turizam / 12% programiranje, dok je 2019. odnos 62% turizam / 38% programiranje. Može se zaključiti da turizam još uvijek čini mnogo veći udio u ekonomskoj strukturi, ali programiranje bilježi veće stope rata i konvergira sektoru turizma prema svim promatranim parametrima.
-
-
-```{r}
-gfi_naverev24 <- gfi_sample_turizam_prog[, lapply(.SD, sum), 
-                                         by = c("djelatnosti", "nacerev24", "reportyear"),
-                                         .SDcols = c("Placa", "Nett", "NetoFin", 
-                                                     "Amortizacija")]
-setorderv(gfi_naverev24, c("djelatnosti", "nacerev24", "reportyear"))
-gfi_naverev24[, `:=`(
-  DodanaVrijednost = Placa + Nett + NetoFin + Amortizacija
-)]
-gfi_naverev24[, nacerev24 := as.factor(nacerev24)]
-
-# graf
-ggplot(gfi_naverev24, 
-       aes(x = reportyear, y = DodanaVrijednost, fill = nacerev24)) +
-  geom_bar(stat="identity") +
-  facet_wrap(vars(djelatnosti)) +
-  theme(legend.position="bottom", legend.title=element_blank()) +
-  guides(fill=guide_legend(nrow=3, byrow=TRUE))
-```
-
-Analizu turističkog i programerskog sektora sektora nastavljamo analizom strukture dodane vrijednosti prema NACEREV 4. razini (slika xx.). Kod sektora turizma najveći udio bilježi sektor 5501 - hoteli i sličan smještaj, a drugi najveći udio ima podsektor 5610 - djelatnosti restorana i ostalih objekata za pripremu i usluživanje hrane. Kod sektora programiranja najveći udio ima sektor 6201 - Računalno programiranje.
+Dinamika kretanja dodane vrijednosti, zaposlenosti, ukupnog prihoda i izvoza u (pod)sektorima industrije, turizma i programiranja prikazana je na slici [-@fig-struktura-turizam-programiranje]. Industrija ostvaruje mnogo veće vrijednosti u odnosu na ostale sektore prema svim pokazateljima, ali se trendovi razlikuju. Postoji izražen trend relativno bržeg rasta programiranja, od ostala dva sektora. Primjerice, na početku razdoblja udio ukupnih prihoda između industrije, turizma i programiranja iznosio je 93%, 5% i 1%. Na kraju razdoblja iznosili su 80%, 13% i 5%. Dakle, raste značaj turizma i programiranja u odnosu na industriju, ako se gleda prema varijabli ukupnih prihoda. Ako pogledamo samo odnos turizma i programiranja, omjer je iznosio 20% programiranje, 80% turizam, dok je na kraju razdoblja odnos 30% - 70%. Programiranje dakle raste brže od turizma. Kod izvoza je promjena još naglašenija. Odnos je na početku razdoblja bio 88% turizam / 12% programiranje, dok je 2019. odnos 62% turizam / 38% programiranje. Može se zaključiti da turizam još uvijek čini mnogo veći udio u ekonomskoj strukturi, ali programiranje bilježi veće stope rata i konvergira sektoru turizma prema svim promatranim parametrima.
 
 ```{r}
-gfi_naverev_dv <- gfi_sample_turizam_prog[, lapply(.SD, sum), 
+#| label: fig-struktura-dv-3s
+#| fig-height: 7
+#| fig-cap: 'Strutkura dodane vrijednosti za sektor turizma, sektor programiranja i prerađivački sektor u RH za razdoblje 2000-2019'
+
+gfi_naverev_dv <- gfi_sample_turizam_prog[, lapply(.SD, sum),
                                          by = c("djelatnosti", "reportyear"),
-                                         .SDcols = c("Placa", "Nett", "NetoFin", 
+                                         .SDcols = c("Placa", "GrossProfit", "NetoFin",
                                                      "Amortizacija")]
 # setorderv(gfi_naverev_dv, c("djelatnosti", "reportyear"))
 # gfi_naverev_dv[, `:=`(
 #   DodanaVrijednost = Placa + Nett + NetoFin + Amortizacija
 # )]
 # gfi_naverev_dv[, djelatnosti := as.factor(djelatnosti)]
+
 gfi_naverev_dv <- melt(gfi_naverev_dv, id.vars = c("reportyear", "djelatnosti"))
+gfi_naverev_dv[, variable := fcase(variable == "Placa", "Plaća",
+                                   variable == "GrossProfit", "Bruto Dobit",
+                                   variable == "Amortizacija", "Amortizacija",
+                                   variable == "NetoFin", "Neto fin. rashodi"
+                                   )]
+Encoding(gfi_naverev_dv$variable) <- "UTF-8"
 # gfi_naverev_dv[djelatnosti == "Turizam" & reportyear == "2019", value / sum(value)]
 # gfi_naverev_dv[djelatnosti == "Programiranje" & reportyear == "2019", value / sum(value)]
+# gfi_naverev_dv[djelatnosti == "Industrija" & reportyear == "2019", value / sum(value)]
 
 # graf
-ggplot(gfi_naverev_dv, 
+ggplot(gfi_naverev_dv,
        aes(x = reportyear, y = value, fill = variable)) +
   geom_bar(stat="identity") +
-  facet_wrap(vars(djelatnosti)) +
-  theme(legend.position="bottom", legend.title=element_blank()) +
-  guides(fill=guide_legend(nrow=3, byrow=TRUE))
+  facet_wrap(vars(djelatnosti), scales = "free") +
+  scale_fill_grey(start = 0, end = 0.8) +
+  labs(y = "Struktura dodne vrijednosti (mlrd. KN)") +
+  theme_opatija()
 ```
 
-Slika xx. prikazuje strukturu dodane vrijednosti prema tipu dohotka koji generira dodanu vrijednost (bruto dobit, trošak osoblja, neto financijski prihodi, amortizacija). Struktura dodane vrijednosti pokazuje da najveći udio u oba sektora ima trošak osoblja. Udio troškova osoblja je oko 55% dodane nove vrijednosti kod sektora turizma te oko 60% kod sektora programiranja. Kod turizma, po visini udjela slijedi amortizacija, koja čini cca 25% dodane vrijednosti, dok je kod sektora programiranja udio amortizacije tek oko 8%. Bruto dobit pokazuje značajne oscilacije kod svih sektora. U sektoru programiranja bruto dobit čini 28% dodane vrijednosti, a kod turizma 15% na kraju razdoblja, što indicira veću profitabilnost sektora programiranja u odnosu na sektor turizma. Zanimljivo je primijetiti i da je sektor turizma bilježio negativnu agregatnu bruto dobit nekoliko godina za redom, dok je kod sektora programiranja bruto dobit vrlo stabilna. Neto financijski rashodi su mali udio ukupne dodane vrijednosti.
+Grafikon [-@fig-struktura-dv-3s] prikazuje strukturu dodane vrijednosti prema tipu dohotka koji generira dodanu vrijednost (bruto dobit, trošak osoblja, neto financijski rashodi, amortizacija). Važno je primjetiti da je zbog mnogo veće sume dodane vrijednosti za industriju svaka y os prikazana zasebno, a ne skupno za sve grafikone. Struktura dodane vrijednosti pokazuje da najveći udio u sva tri sektora ima trošak osoblja. Udio troškova osoblja je oko 55% dodane nove vrijednosti kod sektora turizma i industrije te oko 60% kod sektora programiranja. Kod industrije i turizma, po visini udjela slijedi amortizacija, koja čini cca 18% dodane vrijednosti kod industrije i cca 25% dodane vrijednosti kod turizma, dok je kod sektora programiranja udio amortizacije tek oko 8%. Bruto dobit pokazuje značajne oscilacije kod svih sektora. U sektoru programiranja bruto dobit čini 28% dodane vrijednosti, a kod turizma 15% na kraju razdoblja, što ukazuje na veću profitabilnost sektora programiranja u odnosu na sektor turizma i industrije. Zanimljivo je primijetiti i da je sektor turizma bilježio negativnu agregatnu bruto dobit nekoliko godina za redom, dok je kod sektora programiranja bruto dobit vrlo stabilna. Neto financijski rashodi su mali udio ukupne dodane vrijednosti.
 
-Agregatne razine varijabli ne daju kompletan uvid u perspektivnost pojedinih (pod)sektora. Usporedba performansi zahtijeva upotrebu pokazatelja poslovanja, koji odražavaju količinu kvalitete ekonomskih procesa. Na sljedećoj slici stoga prikazujemo neke od pokazatelja performansi za oba sektora. Točnije, prikazuje se dinamika sljedećih varijabli: udio dodane nove vrijednosti u ukupnim prihodima, neto marža, produktivnost i udio neto izvoza u prihodima.
+Agregatne razine varijabli ne daju kompletan uvid u perspektivnost pojedinih (pod)sektora. Usporedba performansi zahtijeva upotrebu pokazatelja poslovanja, koji odražavaju količinu kvalitete ekonomskih procesa. Na sljedećim grafikonima su prikazani odabrani pokazatelji poslovanja sva tri sektora: ukupna suma dodane vrijednosti, ukupni broj zaposlenih, prosječna bruto plaća, ukupna suma poreza na dobit, udio dodane nove vrijednosti u ukupnim prihodima, neto marža, produktivnost i udio neto izvoza u prihodima. U nastavku slijedi intepretacija generiranih grafikona.
 
 ```{r}
 # Udio izvoza u prihodu, neto marza
 dt_performanse <- melt(gfi_turizam_prog, c("djelatnosti", "reportyear"),
-                       measure.vars = c("NetoMarza", "Produktivnost", 
+                       measure.vars = c("ProsjecnaPlaca",
+                                        "Zaposleni",
+                                        "Porez",
+                                        "DodanaVrijednost",
+                                        "NetoMarza", 
+                                        "Produktivnost",
                                         "NetoIzvozPrihodi",
                                         "DnvPrihodi"))
-ggplot(dt_performanse, 
-       aes(x = reportyear, y = value, color = djelatnosti)) +
-  geom_line() +
-  facet_wrap(vars(variable), scales = "free") +
-  labs(x = "Godine", y = "Udio izvoza u prihodu")
-
 ```
 
-Prvi graf na slici xx. pokazuje dinamiku neto marže u promatranom razdoblju. Sektor programiranja konzistentno ostvaruje veće neto marže od sektora turizma. Zanimljivo je primijetiti kako je turizam u otprilike pola razdoblja ostvarivao negativne neto marže.
+```{r}
+#| label: fig-prosjecna-placa
+#| fig-height: 7
+#| fig-cap: 'Prosječna plaća za sektor turizma, sektor programiranja i prerađivački sektor u RH za razdoblje 2000-2019'
 
-Produktivnost se smatra temeljnim faktorima dugoročnog ekonomskog rasta, stoga na drugom grafu slike xx. prikazujemo dinamiku pokazatelja produktivnosti za 4 temeljna sektora. Kao mjera produktivnosti koristi se produktivnost rada, odnosno omjer ukupnih rashoda zaposlenih (bruto plaće i ostala davanja) i prosječnog broja zaposlenih prema satima rada, na kraju razdoblja. Graf otkriva da sektor programiranja ostvaruje znatno veću produktivnost od sektora programiranja.
+ggplot(dt_performanse[variable == "ProsjecnaPlaca"],
+       aes(x = reportyear, y = value, linetype = djelatnosti)) +
+  geom_line() +
+  labs(x = "Godine", y = "Prosječna godišnja bruto plaća (KN)") +
+  scale_linetype_manual(values=c("solid", "dotted", "longdash")) +
+  theme_opatija()
+```
 
-Sljedeći grafikon pokazuje odnos neto izvoza i prihoda. Za razliku od prethodne slike, turizam ostvaruje veće udjele neto izvoza od sektora programiranja sve do 2015. godine, i nakon 2016. godine. Trend pokazuje da programiranje ostvaruje sve bolje izvozne performanse, dok su neto izvozne performanse sektora turizma u najbolju ruku stabilne. Iako se izvozni potencijal ističe kao glavni faktor važnosti turizma, očito je da programiranje prema istom zaslužuje istu potporu iz javnih resursa.
-
-Na slici xx je prikazano i kretanje agregatne dodane nove vrijednosti u odnosu na ukupne prihode za razdoblje 2001-2019. Sektor programiranja je bilježio veće vrijednosti između 2007. i 2015. godine, nakon čega veće vrijednosti bilježi turizam .Ukupno gledajući, može se reći da oba sektora u prosjeku ostvaruju podjednake razine dodane vrijednosti u odnosu na ukupne prihode, ali i da turizam pokazuje znatno veću volatilnost.
-
-
-Analiza heterogenosti poslovnih subjekata iz pojedinih sektora može pružiti dodatan uvid o naravi promjena ekonomske strukture u RH. Ovdje ćemo se fokusirati ne jedan aspekt heterogenosti - koncentracija osnovnih varijabli. Koncentraciju ćemo računati kao udio prihoda, izvoza, dodane vrijednosti i ukupnim prihoda za 99% i 95% poslovnih subjekata sa najvećim udjelom istih varijabli. Izračun je rađen samo za 2019. godinu.
+Na grafu [-@fig-prosjecna-placa] je prikazana prosječna godišnja bruto plaća prema podacima iz godišnjih financijskih izvještaja. Prosječna plaća je računata kao odnos troškova osoblja i broja zaposlenih prema satima rada. Prosječna plaća ima pozitivan trend kod sva tri sektora, međutim sektor programiranja bilježi mnogo veće razine prosječnih bruto plaća. Prosječna plaća u sektoru programiranja je 80% veća od prosječne plaće u sektoru turizma (163 tisuće u odnosu na 91 tisuću kuna) te 72% veća od prosječne plaće od sektora industrije. Ove vrijednosti vrijede za 2019 godinu. Čak i uz ovako veliki jaz u prosječnim plaćama, sektor programiranja bilježi veće stope rasta prosječnih plaća od ostalih sektora.
 
 ```{r}
-gfi_conc <- gfi_sample_turizam_prog[, .(subjectid, reportyear, djelatnosti, Export, Prihod, 
-                                        employeecounteop, DNV = Placa + Nett + NetoFin + Amortizacija)]
+#| label: fig-sr-zaposlenost
+#| fig-height: 7
+#| fig-cap: 'Broj zaposlenih osoba prema satima rada za sektor turizma, sektor programiranja i prerađivački sektor u RH za razdoblje 2000-2019'
+
+ggplot(dt_performanse[variable == "Zaposleni"],
+       aes(x = reportyear, y = value / 1000, linetype = djelatnosti)) +
+  geom_line() +
+  labs(x = "Godine", y = "Broj zaposlenih (000)") +
+  scale_linetype_manual(values=c("solid", "dotted", "longdash")) +
+  theme_opatija()
+```
+
+Na grafu [-@fig-sr-zaposlenost] je prikazan ukupan broj zaposlenih tijekom promatrano razdoblja za sva tri sektora.Industrija zapošljava najviše osoba, slijedi turizam, pa programiranje. Međutim, osim ukupne suem, zanimljive su i stope rasta zaposlenosti. Industrija tijekom cijelog razdoblja bilježi rast zaposlenosti od 3%, turizam rast od 292%, a programiranje rast broj zaposlenih od čak 656%.
+
+```{r}
+#| label: fig-dv-3s
+#| fig-height: 7
+#| fig-cap: 'Stopa rasta zaposlenosti za sektor turizma, sektor programiranja i prerađivački sektor u RH za razdoblje 2000-2019'
+
+ggplot(dt_performanse[variable == "DodanaVrijednost"],
+       aes(x = reportyear, y = value, linetype = djelatnosti)) +
+  geom_line() +
+  labs(x = "Godine", y = "Dodana vrijednost (mlrd. KN)") +
+  scale_linetype_manual(values=c("solid", "dotted", "longdash")) +
+  theme_opatija()
+```
+
+Grafikon [-@fig-dv-3s] pokazuje dinamiku dodane vrijednosti. Iako je na prijašnjim grafikonima već analizirana struktura dodane vrijednosti, ovdje radi preglednosti pokazujemo ponovno sumu dodane vrijednosti. Zaključci su vrlo slični nalazima iz prethodnog grafa. Industrija ima najveću razinu dodane vrijednosti i rast u cijelom razdoblju od 209%. Po veličini slijedi turizam sa rastom od 658%, te programiranje sa najmanjom razinom dodane vrijednosti, ali rastom od 1.500%.
+
+```{r}
+#| label: fig-porez-3s
+#| fig-height: 7
+#| fig-cap: 'Porez na dobit za sektor turizma, sektor programiranja i prerađivački sektor u RH za razdoblje 2000-2019'
+
+ggplot(dt_performanse[variable == "Porez"],
+       aes(x = reportyear, y = value, linetype = djelatnosti)) +
+  geom_line() +
+  labs(x = "Godine", y = "Porez na dobit (mlrd. KN)") +
+  scale_linetype_manual(values=c("solid", "dotted", "longdash")) +
+  theme_opatija()
+```
+
+Grafikon [-@fig-porez-3s] prikazuje dinamiku poreza na dobit. Sektor turizma pokazuje značajne oscilacije. Prosjek je oko milijardu kuna godišnje. Sektor programiranja i turizma ostvaruju vrlo slične iznose poreza na dobit. Turizam pro kraju razdoblja ostvaruje nešto veće iznose poreza na dobit, što nije čudno s obzirom na mnogo veću razinu agregatnih prihoda.
+
+```{r}
+#| label: fig-nm-3s
+#| fig-height: 7
+#| fig-cap: 'Neto marža za sektor turizma, sektor programiranja i prerađivački sektor u RH za razdoblje 2000-2019'
+
+ggplot(dt_performanse[variable == "NetoMarza"],
+       aes(x = reportyear, y = value, linetype = djelatnosti)) +
+  geom_line() +
+  labs(x = "Godine", y = "Neto marža") +
+  scale_linetype_manual(values=c("solid", "dotted", "longdash")) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  theme_opatija()
+```
+
+
+Grafikon na slici [-@fig-nm-3s] pokazuje dinamiku neto marže u promatranom razdoblju. Sektor programiranja konzistentno ostvaruje veće neto marže od od ostala dva sektora. Zanimljivo je primijetiti kako je turizam u polovici promatranog razdoblja ostvarivao negativne neto marže, a u prosjeku ostvaruje manje marže i od sektora industrije.
+
+```{r}
+#| label: fig-p-3s
+#| fig-height: 7
+#| fig-cap: 'Produktivnost za sektor turizma, sektor programiranja i prerađivački sektor u RH za razdoblje 2000-2019'
+
+ggplot(dt_performanse[variable == "Produktivnost"],
+       aes(x = reportyear, y = value, linetype = djelatnosti)) +
+  geom_line() +
+  labs(x = "Godine", y = "Produktivnost rada") +
+  scale_linetype_manual(values=c("solid", "dotted", "longdash")) +
+  theme_opatija()
+```
+
+Produktivnost se smatra temeljnim faktorom dugoročnog ekonomskog rasta, stoga je na grafikonu [-@fig-p-3s] prikazana dinamika produktivnosti za 3 promatrana sektora. Kao mjera produktivnosti korištena je produktivnost rada, odnosno omjer ukupnih rashoda zaposlenih (bruto plaće i ostala davanja) i prosječnog broja zaposlenih prema satima rada, na kraju razdoblja. Graf pokazuje da sektor programiranja ostvaruje znatno veću produktivnost od sektora turizma i industrije.
+
+```{r}
+#| label: fig-nip-3s
+#| fig-height: 7
+#| fig-cap: 'Omer neto izvoza i prihoda za sektor turizma, sektor programiranja i prerađivački sektor u RH za razdoblje 2000-2019'
+
+ggplot(dt_performanse[variable == "NetoIzvozPrihodi"],
+       aes(x = reportyear, y = value, linetype = djelatnosti)) +
+  geom_line() +
+  labs(x = "Godine", y = "Neto izvoz / prihod") +
+  scale_linetype_manual(values=c("solid", "dotted", "longdash")) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  theme_opatija()
+```
+
+Sljedeći grafikon ( [-@fig-nip-3s] ) pokazuje odnos neto izvoza i prihoda. Turizam ostvaruje veće udjele neto izvoza od sektora programiranja sve do 2015. godine ali i nakon 2016. godine. Trend pokazuje da programiranje ostvaruje sve bolje izvozne performanse, dok su neto izvozne performanse sektora turizma stabilne. Iako se izvozni potencijal ističe kao glavni faktor važnosti turizma, očito je da programiranje prema istom zaslužuje istu potporu iz javnih resursa. Sektor industrije bilježi u prosjeku slične iznose neto izvoza kao i programiranje.
+
+```{r}
+#| label: fig-dvp-3s
+#| fig-height: 7
+#| fig-cap: 'Omjer dodane vrijednosti i prihoda za sektor turizma, sektor programiranja i prerađivački sektor u RH za razdoblje 2000-2019'
+
+ggplot(dt_performanse[variable == "DnvPrihodi"],
+       aes(x = reportyear, y = value, linetype = djelatnosti)) +
+  geom_line() +
+  labs(x = "Godine", y = "Dodana vrijednost / prihod") +
+  scale_linetype_manual(values=c("solid", "dotted", "longdash")) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  theme_opatija()
+```
+
+Na grafikonu [@-fig-dvp-3s] je prikazano i kretanje agregatne dodane nove vrijednosti u odnosu na ukupne prihode za razdoblje 2001-2019. Sektor programiranja je bilježio veće vrijednosti između 2007. i 2015. godine, nakon čega veće vrijednosti bilježi turizam .Ukupno gledajući, može se reći da oba sektora u prosjeku ostvaruju podjednake razine dodane vrijednosti u odnosu na ukupne prihode, ali i da turizam pokazuje znatno veću volatilnost.SEktor industrije, s druge strane, ostvaruje znatno manje vrijednosti pokazatelja.
+
+Analiza heterogenosti poslovnih subjekata iz pojedinih sektora može pružiti dodatan uvid o naravi promjena ekonomske strukture u RH. Stoga je tablici 1 prikazan pokazatelj heterogenosti u vidu koncentracije osnovnih varijabli. Koncentraciju je izračunata kao udio prihoda, izvoza, dodane vrijednosti i ukupnim prihoda za 99% i 95% poslovnih subjekata sa najvećim udjelom istih varijabli. Izračunuključuje za 2019. godinu, a provedena je za sektore programiranja, industrije i turizma.
+
+```{r}
+gfi_conc <- gfi_sample_turizam_prog[, .(subjectid, reportyear, djelatnosti, Export, Prihod,
+                                        employeecounteop, DNV = Placa + GrossProfit + NetoFin + Amortizacija)]
 gfi_conc_2019 <- gfi_conc[reportyear == 2019]
 cols <- c("Export", "Prihod", "employeecounteop", "DNV")
 cols_new <- paste0(cols, "_99")
 
 # prihod
-gfi_conc_2019_prihod_99 <- gfi_conc_2019[, sum(Prihod, na.rm = TRUE), 
+gfi_conc_2019_prihod_99 <- gfi_conc_2019[, sum(Prihod, na.rm = TRUE),
                                          by = .(djelatnosti, velik = Prihod > quantile(Prihod, 0.99))]
 gfi_conc_2019_prihod_99[, tip := "prihod_99"]
-gfi_conc_2019_prihod_95 <- gfi_conc_2019[, sum(Prihod, na.rm = TRUE), 
+gfi_conc_2019_prihod_95 <- gfi_conc_2019[, sum(Prihod, na.rm = TRUE),
                                          by = .(djelatnosti, velik = Prihod > quantile(Prihod, 0.95))]
 gfi_conc_2019_prihod_95[, tip := "prihod_95"]
 
 # DV
-gfi_conc_2019_dv_99 <- gfi_conc_2019[, sum(DNV, na.rm = TRUE), 
+gfi_conc_2019_dv_99 <- gfi_conc_2019[, sum(DNV, na.rm = TRUE),
                                      by = .(djelatnosti, velik = DNV > quantile(DNV, 0.99))]
 gfi_conc_2019_dv_99[, tip := "dv_99"]
-gfi_conc_2019_dv_95 <- gfi_conc_2019[, sum(DNV, na.rm = TRUE), 
+gfi_conc_2019_dv_95 <- gfi_conc_2019[, sum(DNV, na.rm = TRUE),
                                      by = .(djelatnosti, velik = DNV > quantile(DNV, 0.95))]
 gfi_conc_2019_dv_95[, tip := "dv_95"]
 
 # izvoz
-gfi_conc_2019_ex_99 <- gfi_conc_2019[, sum(Export, na.rm = TRUE), 
+gfi_conc_2019_ex_99 <- gfi_conc_2019[, sum(Export, na.rm = TRUE),
                                      by = .(djelatnosti, velik = Export > quantile(Export, 0.99))]
 gfi_conc_2019_ex_99[, tip := "ex_99"]
-gfi_conc_2019_ex_95 <- gfi_conc_2019[, sum(Export, na.rm = TRUE), 
+gfi_conc_2019_ex_95 <- gfi_conc_2019[, sum(Export, na.rm = TRUE),
                                      by = .(djelatnosti, velik = Export > quantile(Export, 0.95))]
 gfi_conc_2019_ex_95[, tip := "ex_95"]
 
 # zaposlenost
-gfi_conc_2019_emp_99 <- gfi_conc_2019[, sum(employeecounteop, na.rm = TRUE), 
+gfi_conc_2019_emp_99 <- gfi_conc_2019[, sum(employeecounteop, na.rm = TRUE),
                                      by = .(djelatnosti, velik = employeecounteop > quantile(employeecounteop, 0.99))]
 gfi_conc_2019_emp_99[, tip := "emp_99"]
-gfi_conc_2019_emp_95 <- gfi_conc_2019[, sum(employeecounteop, na.rm = TRUE), 
+gfi_conc_2019_emp_95 <- gfi_conc_2019[, sum(employeecounteop, na.rm = TRUE),
                                      by = .(djelatnosti, velik = employeecounteop > quantile(employeecounteop, 0.95))]
 gfi_conc_2019_emp_95[, tip := "emp_95"]
 
 # koncetracija
-concetration <- rbind(gfi_conc_2019_prihod_99, gfi_conc_2019_prihod_95, 
+concetration <- rbind(gfi_conc_2019_prihod_99, gfi_conc_2019_prihod_95,
                       gfi_conc_2019_dv_99,gfi_conc_2019_dv_95,
                       gfi_conc_2019_emp_99, gfi_conc_2019_emp_95,
                       gfi_conc_2019_ex_99, gfi_conc_2019_ex_95)
@@ -626,17 +768,16 @@ concetration[, velik := fcase(velik, "velik", !velik, "mali")]
 tbl_ <- dcast(concetration, formula = djelatnosti ~ tip + velik, value.var = "udio", fun = sum)
 cols <- colnames(tbl_)[grep("mali", colnames(tbl_))]
 tbl_ <- tbl_[, .SD, .SDcols = !cols]
+colnames(tbl_ ) <- c("Djelatnost", "DV 95pct", "DV 99pct",
+                     "ZAP 95pct", "ZAP 99pct", "IZVOZ 95pct",
+                     "IZVOZ 99pct", "PRIHOD 95pct", "PRIHOD 99pct")
+
 kableExtra::kable(tbl_)
 ```
 
-Kod dodane vrijednosti, programiranje i turizam ostvaruju sličnu koncentraciju: oko 5% najvećih poduzeća po dodanoj vrijednosti generira 21% dodane vrijednosti. Kod zaposlenosti i ukupnih prihoda se vrijednosti također ne razlikuju značajno. Kod izvoza ipak postoji značajan razlika. Prvo treba primijetiti da je izvoz snažno koncentriran kod obje djelatnosti. Kod turizma, 1% poduzeća poduzeća koje najviše izvoze generiraju 95% ukupnog izvoza, dok je kod programiranja raj broj 67%. Ako se gleda 5% poduzeća koje najviše izvoze, kod turizma je ta brojka 99%, a kod programiranja 95%. Visoka koncentriranost izvoza je stilizirana činjenica u međunarodnoj trgovini.
-
-
+Prema pokazatelju dodane vrijednosti, programiranje i turizam imaju sličan pokazatelj koncentracije: oko 5% najvećih poduzeća po dodanoj vrijednosti generira 21% dodane vrijednosti. Kod zaposlenosti i ukupnih prihoda se vrijednosti također ne razlikuju značajno. Kod izvoza ipak postoji značajan razlika. Prvo treba primijetiti da je izvoz snažno koncentriran kod obje djelatnosti. Kod turizma, 1% poduzeća poduzeća koje najviše izvoze generiraju 95% ukupnog izvoza, dok je kod programiranja raj broj 67%. Ako se gleda 5% poduzeća koje najviše izvoze, kod turizma je ta brojka 99%, a kod programiranja 95%. Visoka koncentriranost izvoza je stilizirana činjenica u međunarodnoj trgovini.
 
 ## Zaključak
-
-
-
 
 ## Literatura
 
