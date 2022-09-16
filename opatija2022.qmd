@@ -1,8 +1,11 @@
 ---
-title: "Struktura i dinamika privrednih djelatnosti u Hrvatskoj"
+title: "Analiza strukturnih promjena u sektorima međunarodno utrživih proizvoda i usluga"
 author:
-  - name: Josip Tica
-    orcid: https://orcid.org/0000-0001-7937-1573
+  - name: Prof. dr. sc. Josip Tica
+    email: jtica@efzg.hr
+    affiliations:
+      - name: Ekonomski fakultet
+        number: +385 1 2383 162
 format: 
   docx:
     fig-width: 9
@@ -11,7 +14,7 @@ execute:
   echo: false
   warning: false
 crossref:
-  fig-title: Slika   # (default is "Figure")
+  fig-title: Grafikon   # (default is "Figure")
 ---
 
 ```{r}
@@ -129,7 +132,7 @@ Nakon 90-ih godina do danas tercijarizacija postaje dominantan čimbenik promjen
 
 Ekonomska literatura naglašava brojne druge aspekte tercijarizacijskog procesa: relativno nižu produktivnost uslužnog sektora u odnosu na proizvodni (Krüger, 2008), postojanje značajnih unutarsektorskih razlika u tehnološkim kapacitetima, produktivnosti i obilježjima radne snage (Pillat and Wolf, 2005), važnost geografskih faktora (Herrendorf et al., 2014), značajne razlike u procesu tercijarizacije između razvijenih zemalja i zemalja u razvoju i dr. Upravo su specifičnosti procesa tercijarizacije u tranzicijskim i zemljama u razvoju te nedostatak istraživanja u domaćoj literaturi motivi za dublju analizu ovog procesa u Hrvatskoj. Te se specifičnosti odnose se na povijesne, institucionalne i političke karakteristike domaće ekonomije, tranzicijsko razdoblje obilježeno ratnim zbivanjima, zakašnjelo uključivanje u globalne financijske tokove, zakašnjelo pristupanje u EU i dr.
 
-Osim pregleda strukture i dinamike na razini privrednih djelatnosti, ovo se istraživanje fokusira na dva uslužna podsektora - turizma i programiranja. Dok je turizam već dugo prepoznat kao strateška indsutrija s zahtjevanim visokim investicijama javnog sektora, programiranje tek nedavno dolazi u fokus ekonomske politike u RH. U radu se stoga istražuju pokazatelji produktivnosti, dodane vrijednosti, neto izvoza i profitabilnosti poslovanja na razini privrednih djelatnosti i u navedenim podsektorima uslužnih djelatnosti.
+Osim pregleda strukture i dinamike na razini privrednih djelatnosti, ovo se istraživanje fokusira na dva uslužna podsektora - turizma i programiranja. Dok je turizam već dugo prepoznat kao strateška industrija s zahtijevanim visokim investicijama javnog sektora, programiranje tek nedavno dolazi u fokus ekonomske politike u RH. U radu se stoga istražuju pokazatelji produktivnosti, dodane vrijednosti, neto izvoza i profitabilnosti poslovanja na razini privrednih djelatnosti i u navedenim podsektorima uslužnih djelatnosti.
 
 ## Pregled literature
 
@@ -141,20 +144,22 @@ U novijoj se literaturi naglašava niz dodatnih aspekata procesa tercijarizacije
 
 Na empirijskoj strani analize tercijarizacijskog procesa je moguće identificirati tri (čvrste) stilizirane (empirijske) činjenice, pretežito potvrđene za bogate i razvijene zemlje: 1) povećanje udjela sektora usluga u ukupnoj dodatnoj vrijednosti i zaposlenosti, 2) glavnu ulogu u rastu uslužnog sektora imaju visokotehnološki podsektori uslužnih djelatnosti (financijske djelatnosti, informatičke djelatnosti, zdravstvo, obrazovne djelatnosti) dok sektori manjeg tehnološkog kapaciteta opadaju u važnosti, 3) postojanje rastuće premije na tehnološki specifične vještine proizvodnog faktora rada.
 
-Prethodno navedena objašnjenja i stilizirane empirijske činjenice uglavnom se odnose na bogate i razvijene zemlje, no za njihovu valjanost u zemljama u razvoju i tranziciji, poput Hrvatske, znatno je manje dokaza (Rodrik, 2016) ili su uglavnom neistražena. Razlog su tomu specifičnosti povijesnog naslijeđa, institucionalne strukture (Hall i Soskice, 2001), stadiji razvoja u zemljama u razvoju i dr. Primjerice, ekspanzija proizvodnog sektora u tranzicijskoj zemlji može se razvijati paralelno sa sektorom usluga (Dasgupta i Singh, 2006), umjesto da mu prethodi -- kako nalaže teorija. Petpostavka o većoj produktivnosti i njezinu bržem rastu u uslužnom sektoru karakteristična je za visokotehnološke uslužne djelatnosti u razvijenim zemljama koje inoviraju samostalno i posjeduju odgovarajuću infrastrukturu za tehnološki napredak. S druge strane, zemlje u razvoju znatno više ovise o transferu tehnologije (tehnologiji koju nisu proizvele same). Nadalje, ova pretpostavka ne uzima u obzir postojanje značajnih unutarsektorskih razlika u distribuciji produktivnosti, a dodatno je suočena s problemima mjerenja produktivnosti u uslužnom sektoru. Također, valja napomenuti da su navedene pretpostavke izvedene u teorijskom okviru autarkične ekonomije i ne uzimaju obzir efekt potražnje za outputom proizvođačkog sektora na globalnim tržištima.
+Prethodno navedena objašnjenja i stilizirane empirijske činjenice uglavnom se odnose na bogate i razvijene zemlje, no za njihovu valjanost u zemljama u razvoju i tranziciji, poput Hrvatske, znatno je manje dokaza (Rodrik, 2016) ili su uglavnom neistražena. Razlog su tomu specifičnosti povijesnog naslijeđa, institucionalne strukture (Hall i Soskice, 2001), stadiji razvoja u zemljama u razvoju i dr. Primjerice, ekspanzija proizvodnog sektora u tranzicijskoj zemlji može se razvijati paralelno sa sektorom usluga (Dasgupta i Singh, 2006), umjesto da mu prethodi – kako nalaže teorija. Pretpostavka o većoj produktivnosti i njezinu bržem rastu u uslužnom sektoru karakteristična je za visokotehnološke uslužne djelatnosti u razvijenim zemljama koje inoviraju samostalno i posjeduju odgovarajuću infrastrukturu za tehnološki napredak. S druge strane, zemlje u razvoju znatno više ovise o transferu tehnologije (tehnologiji koju nisu proizvele same). Nadalje, ova pretpostavka ne uzima u obzir postojanje značajnih unutarsektorskih razlika u distribuciji produktivnosti, a dodatno je suočena s problemima mjerenja produktivnosti u uslužnom sektoru. Također, valja napomenuti da su navedene pretpostavke izvedene u teorijskom okviru autarkične ekonomije i ne uzimaju obzir efekt potražnje za outputom proizvođačkog sektora na globalnim tržištima.
 
 Dosadašnje analize tercijarizacijskog procesa, odnosno strukturne promjene u Hrvatskoj pokazuju da se ta tema uglavnom interdisciplinarno istraživala u okviru demografije, sociologije i ekonomije. Prema Wertheimer-Baletić (2017), hrvatsko društvo se nalazi u tzv. posttranzicijskoj etapi razvoja koju obilježavaju niske i uravnotežene stope rodnosti i smrtnosti na gotovo podjednakoj razini, a stopa prirodnog prirasta teži prema nuli. Jedna od zasigurno značajnijih posljedica demografske tranzicije jest starenje stanovništva (npr. Bara i Podgorelec, 2015; Nejašmić i Toskić, 2013) koje, između ostaloga, zahtjeva i nove obrasce zdravstvene i socijalne skrbi (Puljiz, 2000) te općenito potražnju za takvim tipom usluga koje pogoduju ulasku žena u radnoaktivni kontingent stanovništva (Akrap, 2011). Sve to zajedno utječe na povećanje potražnje za uslugama i uslužnim djelatnostima odnosno na proces tercijarizacije (koji također uključuje i djelatnosti kvartarnog i kvintarnog sektora). Sociološka istraživanja te procese promatraju u kontekstu promjena u socio-profesionalnoj strukturi (Peračković, 2010), odnosno obrazovnoj i ekonomskoj strukturi (Majetić, 2015) te u strukturi zaposlenosti i tržišta rada (Matković, 2003), dok ekonomska istraživanja (Gelo i Družić, 2016) tercijarizacijski proces analiziraju u okviru faktorske produktivnosti u privrednim sektorima.
 
-Ovo će istraživanje, uz prethodno navedene, obuhvatiti i druge, dimenzije procesa tercijarizacije u Hrvatskoj za razdoblje od 2001. do 2019. godine. Te dimenzije uključuju: analizu dodane vrijednosti i drugih pokazatelja proizvodnog outputa koja će pokazati glavne trendove procesa tercijarizacije; analizu produktivnosti koja pruža nove uvide u prirodu tehnološke promjene unutar uslužnog sektora; analizu kretanja zaposlenosti i strukture proizvodnog faktora rada; analizu vanjskotrgovinske dinamike u strukturi gospodarskih djelatnosti kako bi se olakšalo razumijevanje relativne važnosti domaćeg i globalnog tržišta u procesu tercijarizacije; analizu domaćih i stranih investicija u strukturi privrednih djelatnosti koja će, osim spoznaja o dinamici akumulacije kapitala, pružiti i nove uvide o važnosti transfera tehnologije u industrijskim sektorima djelatnosti; prostornu analizu procesa tercijarizacije prema geografskim odrednicama kako bi se bolje razumjelo prostorno prostorno rasprostiranje strukturne promjene. Istraživanje će tako omogućiti šire i složenije razumijevanje tercijarizacijskog procesa i strukturne promjene u Hrvatskoj. Takvi uvidi iznimno su važni za za nositelje ekonomske politike ali i dublje razumijevanje tercijarizacijskog procesa.
+Ovo će istraživanje, uz prethodno navedene, obuhvatiti i druge, dimenzije procesa tercijarizacije u Hrvatskoj za razdoblje od 2001. do 2019. godine u kontekstu izvozne konkurentnosti. Te dimenzije uključuju: analizu dodane vrijednosti i drugih pokazatelja proizvodnog outputa koja će pokazati glavne trendove procesa tercijarizacije; analizu produktivnosti koja pruža nove uvide u prirodu tehnološke promjene unutar uslužnog sektora; analizu kretanja zaposlenosti; analizu vanjskotrgovinske dinamike u strukturi gospodarskih djelatnosti kako bi se olakšalo razumijevanje relativne važnosti domaćeg i globalnog tržišta u procesu tercijarizacije; prostornu analizu procesa tercijarizacije prema geografskim odrednicama kako bi se bolje razumjelo prostorno rasprostiranje strukturne promjene. Istraživanje će tako omogućiti šire i složenije razumijevanje tercijarizacijskog procesa i strukturne promjene u Hrvatskoj. Takvi uvidi iznimno su važni za nositelje ekonomske politike ali i dublje razumijevanje tercijarizacijskog procesa.
+
 
 ## Podatci
 
-Glavni izvor kvantitativnih sekundarnih podataka su: popisi stanovništva Hrvatske i računovodstveno-financijski izvještaji (bilanca, račun dobiti i gubitka, procijenjeni izvještaj o novčanom toku) i dodatnih izvještaja (dodatni podaci financijskog izvještaja poduzetnika -- obrazac POD-DOP), na godišnjoj razinii na temelju kojih će se deskriptivno i statistički analizirati struktura i dinamika u sektorima privrednih djelatnosti. Godišnji izvještaji uključuju sva trgovačka društva (društva s ograničenom odgovornošću i dionička društva), obrte koji su po zakonu dužni izrađivati i predavati financijska izvješća mjerodavnim institucijama i zadružna poduzeća. Svi su financijski izvještaji nekonsolidirani.
+Glavni izvor kvantitativnih sekundarnih podataka su: računovodstveno-financijski izvještaji (bilanca, račun dobiti i gubitka, procijenjeni izvještaj o novčanom toku) i dodatnih izvještaja (dodatni podaci financijskog izvještaja poduzetnika – obrazac POD-DOP), na godišnjoj razini na temelju kojih će se deskriptivno i statistički analizirati struktura i dinamika u sektorima privrednih djelatnosti. Godišnji izvještaji uključuju sva trgovačka društva (društva s ograničenom odgovornošću i dionička društva), obrte koji su po zakonu dužni izrađivati i predavati financijska izvješća mjerodavnim institucijama i zadružna poduzeća. Svi su financijski izvještaji nekonsolidirani.
 
-U radu se koriste i računovodstveni pokazatelji:
-- Dodana vrijednost - računa se prema dohodovnom pristupu kao zbroj bruto dobiti, troškova osoblja, neto financijskih rashoda i amortizacije.
-- Neto marža - jednaka je omjeru neto dobiti i ukupnih prihoda.
-- Produktivnost - kao mjera produktivnosti koristi se produktivnost rada, koja se računa kao odnos ukupnih troškova osoblja i dodane vrijednosti.
+U radu se koriste i računovodstveni pokazatelji: 
+* Dodana vrijednost - računa se prema dohodovnom pristupu kao zbroj bruto dobiti, troškova osoblja, neto financijskih rashoda i amortizacije. 
+* Neto marža - jednaka je omjeru neto dobiti i ukupnih prihoda. 
+* Produktivnost - kao mjera produktivnosti koristi se produktivnost rada, koja se računa kao omjer ukupnih rashoda zaposlenih (bruto plaće i ostala davanja) i prosječnog broja zaposlenih prema satima rada.
+
 
 ## Struktura i dinamika ekonomske strukture
 
@@ -202,6 +207,7 @@ zupanije <- zupanije[, .(n = n_distinct(subjectid),
                      by = .(djelatnosti, countyid, municipalityid)]
 zupanije[, produktivnost_rada := (trPlaca / rad)]
 zupanije[, dv := trPlaca + amortizacija + net_fin_prihodi + nett]
+zupanije[, NetExport := izvoz - uvoz]
 zupanije <- geo1[zupanije, on = c("ZUPANIJA" = "countyid")]
 zupanije <- geo2[zupanije, on = c("OPCINA" = "municipalityid")]
 zupanije <- zupanije[, .(djelatnosti, n, prihod, izvoz, uvoz, dv, NAZIV_ZUP, NAZIV_OPC)]
@@ -211,8 +217,10 @@ zupanije <- na.omit(zupanije)
 ```{r}
 # prepare data for graph
 struktura_rh <- na.omit(ekonomska_struktura[, .(reportyear, djelatnosti, Prihod,
-                                                Export, Placa, Amortizacija,
+                                                Placa, Amortizacija, 
+                                                NetExport = Export -Import,
                                                 NetoFin, GrossProfit, employeecounteop)])
+
 
 
 # ekonomska struktura prihodi
@@ -251,17 +259,17 @@ g2 <- ggplot(struktura_rh_dv, aes(reportyear, `Dodana vrijednost`,
   theme_opatija()
 
 # ekonomska struktura izvoz
-struktura_rh_izvoz <- struktura_rh[, .(Izvoz = sum(Export)), 
+struktura_rh_izvoz <- struktura_rh[, .(NetExport = sum(NetExport)), 
                                    by = .(reportyear, djelatnosti)]
 test_1 <- struktura_rh_izvoz[reportyear == 2000, .(djelantosti = djelatnosti,
-                                                 dv_pct = Izvoz / sum(Izvoz))]
+                                                 dv_pct = NetExport / sum(NetExport))]
 test_2 <- struktura_rh_izvoz[reportyear == 2019, .(djelantosti = djelatnosti,
-                                                 dv_pct = Izvoz / sum(Izvoz))]
+                                                 dv_pct = NetExport / sum(NetExport))]
 # cbind(test_1, test_2)
-g3 <- ggplot(struktura_rh_izvoz, aes(reportyear, Izvoz, fill = djelatnosti)) +
+g3 <- ggplot(struktura_rh_izvoz, aes(reportyear, NetExport, fill = djelatnosti)) +
   geom_bar(stat = "identity") +
   scale_fill_grey(start = 0, end = 0.8) +
-  labs(y = "Izvoz (mlrd. KN)") +
+  labs(y = "Neto izvoz (mlrd. KN)") +
   theme_opatija()
 
 # ekonomska struktura zaposlenost
@@ -287,7 +295,7 @@ Kao kriteriji za analizu sektorskih udjela korišteni su: ukupni prihod, dodana 
 
 Raščlanjivanje ekonomske strukture po dodanoj vrijednosti prati sličnu dinamiku, ali pokazuje različite vrijednosti udjela. Na početku razdoblja prednjači sekundarni sektor sa 52% udjela, a slijede tercijarni sa 35% i kvartarni sa 10%. Na kraju razdoblja sekundarni sektor gubi na značaju i čini 38%, a tercijarni sektor ga prestiže i čini 40% udjela. Kvartarni dobiva na značenju i čini 14% udjela. Isto kao i kvintarni koji raste sa 1% na 4%. Ukratko, prema kriteriju dodane vrijednosti tercijarni sektor prestiže sekundarni i postaje dominantni sektor u RH. Sekundarni sektor gubi na veličini, ali još uvijek ima veliki udio.
 
-Prema kriteriju zaposlenosti, nalazi su isti kao i kod dodane vrijednosti. Međutim, za varijablu izvoza su rezultati nešto drugačiji. Na početku razdoblja (2000. godina), sekundarni sektor ima najveći udio izvoza, čak 70%. Slijedi tercijarni sektor sa 25%, kvartarni sektor sa 4%, dok primarni i kvintarni zajedno čine 1%. Na kraju razdoblja, udio izvoza sekundarnog sektora pada na 55%, tercijarni sektor sve više izvozi i raste do 33%, kvartarni također raste, na 8%, dok ostali stagniraju. Sekundarni sektor dakle čini glavninu izvoza, ali ga sve više zamjenjuju tercijarni i kvartarni sektor.
+Prema kriteriju zaposlenosti, nalazi su isti kao i kod dodane vrijednosti. Međutim, za varijablu neto izvoza su rezultati nešto drugačiji. Provo, postoji korelacija dinamike neto izvoza i dinamike trgovinske bilance na agregatnoj razini. Poslovni subjekti su ostvarivali negativan neto izvoz do otprilike 2009. godine, kada se trend promijenio. To je u skladu sa iskustvom Hrvatske prema makroekonomskim podacima. Drugo, postoji znatna razlika strukture neto izvoza po djelatnostima. Na početku razdoblja (2000. godina), svi sektori ostvaruju pozitivan neto izvoz. Nakon 2022. godine trend se okreće i sektori postaju neto uvoznici. Nakon velike financijske krize, sekundarni sektor postaje glavni generator pozitivnog neto izvoza, a tercijarni sektor glavni generator negativnog neto izvoza. Na kraju razdoblja, sekundarni sektor ostvaruje neto izvoz od 1.7 milijardi kuna, tercijarni sektor negativni neto izvoz od -1.5 milijardi kuna, kvartarni pozitivan neto izvoz od 0.63 milijardi kuna, primarni neto izvoz 0.08 milijardi kuna i kvintarni sektor neto izvoz od 0.04 milijardi kuna.
 
 ```{r}
 #| label: fig-ekonomska-struktura-zup
@@ -319,7 +327,7 @@ g2 <- ggplot(zupanije, aes(x = NAZIV_ZUP, y = izvoz, fill = djelatnosti)) +
 g1 / g2 + plot_layout(guides = "collect") & theme(legend.position = 'bottom')
 ```
 
-Na slici [-@fig-ekonomska-struktura-zup] je prikazana ekonomska struktura prema geografskim obilježjima. Budući da zaposlenost, ukupni prihodi i dodana vrijednost imaju sličnu dinamiku, razmatraju se dva pokazatelja - ukupni prihodi i izvoz. Grafikoni se odnose na prostornu raspodjelu vrijednosti po županijama u 2019. godini. Gornji grafikon prikazuje udio pojedinog sektora (primarni, sekundarni, tercijarni, kvartarni, kvintarni) u ekonomskoj strukturi za svaku županiju i upućuje na postojanje značajnih razlika po županijama. Na primjer, najveći udio tercijarnih djelatnosti prema ukupnom prihodu imaju zagrebačka i dubrovačko-neretvanska županija. Međimurska i osječko-baranjska imaju najveći udio sekundarnog sektora. Slika upućuje i na postojanje korelacije između udjela tercijarnog sektora i razvijenosti županije.
+Na grafikonu [-@fig-ekonomska-struktura-zup] je prikazana ekonomska struktura prema geografskim obilježjima. Budući da zaposlenost, ukupni prihodi i dodana vrijednost imaju sličnu dinamiku, razmatraju se dva pokazatelja - ukupni prihodi i izvoz. Grafikoni se odnose na prostornu raspodjelu vrijednosti po županijama u 2019. godini. Gornji grafikon prikazuje udio pojedinog sektora (primarni, sekundarni, tercijarni, kvartarni, kvintarni) u ekonomskoj strukturi za svaku županiju i upućuje na postojanje značajnih razlika po županijama. Na primjer, najveći udio tercijarnih djelatnosti prema ukupnom prihodu imaju zagrebačka i dubrovačko-neretvanska županija. Međimurska i osječko-baranjska imaju najveći udio sekundarnog sektora. Grafikon upućuje i na postojanje korelacije između udjela tercijarnog sektora i razvijenosti županije.
 
 Donji dio slike prikazuje ekonomsku strukturu prema udjelu izvoza u svakom sektoru, u 2019. godini. Posebno valja primijetiti dubrovačko-neretvansku županiju u kojoj zbog velikog značaja turizma, tercijarni sektor ostvaruje 70% izvoza. Slična je interpretacija i za istarsku županiju. S druge strane, neke županije glavninu izvoza ostvaruju u sekundarnom sektoru poput virovitičko-podravske i vukovarsko-srijemske . Može se zaključiti da kod vanjskotrgovinske aktivnosti postoje jznačajne geografske razlike u strukturi privrednih djelatnosti.
 
@@ -338,7 +346,7 @@ ekonomska_struktura <- gfi[, djelatnosti := fcase(
 
 # prepare data for graph
 struktura_rh <- na.omit(ekonomska_struktura[, .(reportyear, djelatnosti, Prihod,
-                                                Export, Placa, Amortizacija,
+                                                NetExport = Export - Import, Placa, Amortizacija,
                                                 NetoFin, GrossProfit, employeecounteop)])
 
 # ekonomska struktura prihodi
@@ -377,18 +385,18 @@ g2 <- ggplot(struktura_rh_dv, aes(reportyear, `Dodana vrijednost`,
   theme_opatija()
 
 # ekonomska struktura izvoz
-struktura_rh_izvoz <- struktura_rh[, .(Izvoz = sum(Export)),
+struktura_rh_izvoz <- struktura_rh[, .(NetExport = sum(NetExport)),
                                    by = .(reportyear, djelatnosti)]
 test_1 <- struktura_rh_izvoz[reportyear == 2000, .(djelantosti = djelatnosti,
-                                                 dv_pct = Izvoz / sum(Izvoz))]
+                                                 dv_pct = NetExport / sum(NetExport))]
 test_2 <- struktura_rh_izvoz[reportyear == 2019, .(djelantosti = djelatnosti,
-                                                 dv_pct = Izvoz / sum(Izvoz))]
+                                                 dv_pct = NetExport / sum(NetExport))]
 # cbind(test_1, test_2)
 
-g3 <- ggplot(struktura_rh_izvoz, aes(reportyear, Izvoz, fill = djelatnosti)) +
+g3 <- ggplot(struktura_rh_izvoz, aes(reportyear, NetExport, fill = djelatnosti)) +
   geom_bar(stat = "identity") +
   scale_fill_grey(start = 0, end = 0.8) +
-  labs(y = "Izvoz (mlrd. KN)") +
+  labs(y = "Neto izvoz (mlrd. KN)") +
   theme_opatija()
 
 # ekonomska struktura zaposlenost
@@ -411,7 +419,7 @@ g4 <- ggplot(struktura_rh_zap, aes(reportyear, Zaposlenost, fill = djelatnosti))
 
 Dosadašnja analiza je potvrdila rastuću važnost tercijarnog sektora u ekonomskoj strukturi s jedne strane, te ukazala na vezu ekonomske razvijenosti pojedinih županije i udjela tercijarnog sektora s druge strane. Zbog važnosti tercijarnog sektora, u nastavku se detaljnije analizira njegova unutarsektorska struktura i dinamika. Prvo je prikazana ekonomska struktura tercijarnog sektora prema dodanoj vrijednosti, zaposlenosti, izvozu i ukupnom prohodu, a nakon toga su detaljnije analizirani podsektori turizma i programiranja.
 
-Slika [-@fig-struktura-tercijarni] prikazuje unutarsektorsku dinamiku tercijarnog sektora. Prema svim varijablama, sektor trgovine čini najveći udio. Međutim, podatci pokazuju da ostali sektori poprimaju sve važniju ulogu. Prema udjelu dodane vrijednosti, u promatranom razdoblju sektor trgovine pada sa 75% dodane vrijednosti na 72%, sektor smještaja raste s 4% na 8%, dok ostali sektori ostaju nepromijenjeni. Prema kriteriju izvoza, trgovina čini sve veći udio izvoza, dok prijevoz čini sve manji udio.
+Grafikon [-@fig-struktura-tercijarni] prikazuje unutarsektorsku dinamiku tercijarnog sektora. Prema svim varijablama, sektor trgovine čini najveći udio. Međutim, podatci pokazuju da ostali sektori poprimaju sve važniju ulogu. Prema udjelu dodane vrijednosti, u promatranom razdoblju sektor trgovine pada sa 75% dodane vrijednosti na 72%, sektor smještaja raste s 4% na 8%, dok ostali sektori ostaju nepromijenjeni. Prema kriteriju neto izvoza, trgovina čini konstanto generira negativan neto izvoz, dok sektori prijevoza i smještaja kontinuirano generiraju pozitivan neto izvoz. Sektor informacija čini vrlo mali udio u neto izvozu.
 
 ## Analiza ključnih izvoznih sektora
 
@@ -450,7 +458,8 @@ gfi_turizam_prog[, `:=`(
   Produktivnost = (Placa * 1000000000) / Zaposleni,
   NetoIzvozPrihodi = (Export - Import) / Prihod,
   ProsjecnaPlaca = Placa * 1000000000 / Zaposleni,
-  SRZaposleni = Zaposleni / shift(Zaposleni) - 1
+  SRZaposleni = Zaposleni / shift(Zaposleni) - 1,
+  NetExport = Export - Import
 )]
 gfi_turizam_prog[, DnvPrihodi := DodanaVrijednost / Prihod]
 gfi_turizam_prog[, SRdv := DodanaVrijednost / shift(DodanaVrijednost) - 1]
@@ -459,7 +468,7 @@ gfi_turizam_prog[, SRdv := DodanaVrijednost / shift(DodanaVrijednost) - 1]
 ```{r}
 # prepare data for graph
 struktura_rh <- na.omit(gfi_sample_turizam_prog[, .(reportyear, djelatnosti, Prihod,
-                                                    Export, Placa, Amortizacija,
+                                                    NetExport = Export - Import, Placa, Amortizacija,
                                                     NetoFin, GrossProfit, employeecounteop)])
 # struktura_rh <- struktura_rh[djelatnosti != "Industrija"]
 
@@ -499,18 +508,18 @@ g2 <- ggplot(struktura_rh_dv, aes(reportyear, `Dodana vrijednost`,
   theme_opatija()
 
 # ekonomska struktura izvoz
-struktura_rh_izvoz <- struktura_rh[, .(Izvoz = sum(Export)),
+struktura_rh_izvoz <- struktura_rh[, .(NetExport = sum(NetExport)),
                                    by = .(reportyear, djelatnosti)]
 test_1 <- struktura_rh_izvoz[reportyear == 2000, .(djelantosti = djelatnosti,
-                                                 dv_pct = Izvoz / sum(Izvoz))]
+                                                 dv_pct = NetExport / sum(NetExport))]
 test_2 <- struktura_rh_izvoz[reportyear == 2019, .(djelantosti = djelatnosti,
-                                                 dv_pct = Izvoz / sum(Izvoz))]
+                                                 dv_pct = NetExport / sum(NetExport))]
 # cbind(test_1, test_2)
 
-g3 <- ggplot(struktura_rh_izvoz, aes(reportyear, Izvoz, fill = djelatnosti)) +
+g3 <- ggplot(struktura_rh_izvoz, aes(reportyear, NetExport, fill = djelatnosti)) +
   geom_bar(stat = "identity") +
   scale_fill_grey(start = 0, end = 0.8) +
-  labs(y = "Izvoz (mlrd. KN)") +
+  labs(y = "Neto izvoz (mlrd. KN)") +
   theme_opatija()
 
 # ekonomska struktura zaposlenost
@@ -533,7 +542,7 @@ g4 <- ggplot(struktura_rh_zap, aes(reportyear, Zaposlenost, fill = djelatnosti))
 
 ```
 
-Dinamika kretanja dodane vrijednosti, zaposlenosti, ukupnog prihoda i izvoza u (pod)sektorima industrije, turizma i programiranja prikazana je na slici [-@fig-struktura-turizam-programiranje]. Industrija ostvaruje mnogo veće vrijednosti u odnosu na ostale sektore prema svim pokazateljima, ali se trendovi razlikuju. Postoji izražen trend relativno bržeg rasta programiranja, od ostala dva sektora. Primjerice, na početku razdoblja udio ukupnih prihoda između industrije, turizma i programiranja iznosio je 93%, 5% i 1%. Na kraju razdoblja iznosili su 80%, 13% i 5%. Dakle, raste značaj turizma i programiranja u odnosu na industriju, ako se gleda prema varijabli ukupnih prihoda. Ako pogledamo samo odnos turizma i programiranja, omjer je iznosio 20% programiranje, 80% turizam, dok je na kraju razdoblja odnos 30% - 70%. Programiranje dakle raste brže od turizma. Kod izvoza je promjena još naglašenija. Odnos je na početku razdoblja bio 88% turizam / 12% programiranje, dok je 2019. odnos 62% turizam / 38% programiranje. Može se zaključiti da turizam još uvijek čini mnogo veći udio u ekonomskoj strukturi, ali programiranje bilježi veće stope rata i konvergira sektoru turizma prema svim promatranim parametrima.
+Dinamika kretanja dodane vrijednosti, zaposlenosti, ukupnog prihoda i izvoza u (pod)sektorima industrije, turizma i programiranja prikazana je na grafikonu [-@fig-struktura-turizam-programiranje]. Industrija ostvaruje mnogo veće vrijednosti u odnosu na ostale sektore prema svim pokazateljima, ali se trendovi razlikuju. Postoji izražen trend relativno bržeg rasta programiranja, od ostala dva sektora. Primjerice, na početku razdoblja udio ukupnih prihoda između industrije, turizma i programiranja iznosio je 93%, 5% i 1%. Na kraju razdoblja iznosili su 80%, 13% i 5%. Dakle, raste značaj turizma i programiranja u odnosu na industriju, ako se gleda prema varijabli ukupnih prihoda. Ako pogledamo samo odnos turizma i programiranja, omjer je iznosio 20% programiranje, 80% turizam, dok je na kraju razdoblja odnos 30% - 70%. Programiranje dakle raste brže od turizma. Kod neto izvoza je dinamika drugačija. Industrija posljednjih 10-ak godina ostvaruje apsolutno najveće razine neto izvoza. Slijedi sektor turizma i potom sektor programiranja. Za razliku od sektora industrije, sektor turizma i programiranja ostvaruju stabilan i kontinuiran rast neto izvoza, bez velikih oscilacija (negativnog neto izvoza prije Velike recesije). Neto izvoz sektora turizma je rastao s 0.04 milijarde kuna u 2000. godini na 0.67 milijardi kuna u 2020. godini (15 puta). Sektor programiranja je rastao sa 0.005 milijardi kuna na 0.093 milijarde kuna (18 puta). Na početku razdoblja je neto izvoz turizma bio 8 puta veći, a na kraju razdoblja je 7.2 puta veći. Važno je primijetiti da sektor programiranja posebno brzo raste u posljednjih 5 promatranih godina.
 
 ```{r}
 #| label: fig-struktura-dv-3s
@@ -663,7 +672,7 @@ ggplot(dt_performanse[variable == "NetoMarza"],
 ```
 
 
-Grafikon na slici [-@fig-nm-3s] pokazuje dinamiku neto marže u promatranom razdoblju. Sektor programiranja konzistentno ostvaruje veće neto marže od od ostala dva sektora. Zanimljivo je primijetiti kako je turizam u polovici promatranog razdoblja ostvarivao negativne neto marže, a u prosjeku ostvaruje manje marže i od sektora industrije.
+Grafikon [-@fig-nm-3s] pokazuje dinamiku neto marže u promatranom razdoblju. Sektor programiranja konzistentno ostvaruje veće neto marže od od ostala dva sektora. Zanimljivo je primijetiti kako je turizam u polovici promatranog razdoblja ostvarivao negativne neto marže, a u prosjeku ostvaruje manje marže i od sektora industrije.
 
 ```{r}
 #| label: fig-p-3s
@@ -775,10 +784,41 @@ colnames(tbl_ ) <- c("Djelatnost", "DV 95pct", "DV 99pct",
 kableExtra::kable(tbl_)
 ```
 
-Prema pokazatelju dodane vrijednosti, programiranje i turizam imaju sličan pokazatelj koncentracije: oko 5% najvećih poduzeća po dodanoj vrijednosti generira 21% dodane vrijednosti. Kod zaposlenosti i ukupnih prihoda se vrijednosti također ne razlikuju značajno. Kod izvoza ipak postoji značajan razlika. Prvo treba primijetiti da je izvoz snažno koncentriran kod obje djelatnosti. Kod turizma, 1% poduzeća poduzeća koje najviše izvoze generiraju 95% ukupnog izvoza, dok je kod programiranja raj broj 67%. Ako se gleda 5% poduzeća koje najviše izvoze, kod turizma je ta brojka 99%, a kod programiranja 95%. Visoka koncentriranost izvoza je stilizirana činjenica u međunarodnoj trgovini.
+Prema pokazatelju dodane vrijednosti, industrija i turizam imaju sličan pokazatelj koncentracije: oko 1% najvećih poduzeća po dodanoj vrijednosti generira oko 57% dodane vrijednosti. Kod programiranjaje je udio mnogo manji (32%). Ako se gleda 5% poslovinh subjekta koji generiraju najveću dodanu vrijednost, najveću koncetraciju pokazuje industrija, potom turizam i na kraju programiranje. 
+
+Kod zaposlenosti i ukupnih prihoda postoji isti obrzac. Industrija pokazuje najveći stupanj koncetracije, slijedi turizam, pa programiranje. Izvoz općenito pokazuje najveći stupanj koncetracije kod svih djelatnosti. Kod turizma, 1% poduzeća koje najviše izvoze generiraju 83% ukupnog izvoza, dok je kod programiranja taj broj 33%, a kod industrije 80%. Ako se gleda 5% poduzeća koje najviše izvoze, kod turizma je ta brojka 99%, a kod programiranja 82%. Može se zaključiti da sektor programiranja karakterizira niži stupanj koncetracije, odnosno veći stupanj unutarsektorske konkurentnosti.
 
 ## Zaključak
 
 ## Literatura
 
-https://growthecon.com/blog/Accounting-Profits/
+Akrap, A. (2011). Sektor zaposlenosti žena i fertilitet u Hrvatskoj. Društvena istraživanja, 20(1): 3–23. https://doi.org/10.5559/di.20.1.01.
+Bara, M.; Podgorelac, S. (2015). Društvene teorije umirovljenja i produktivnog starenja. Etnološka tribina: Godišnjak Hrvatskog etnološkog društva, 45 (38): 58–71. https://doi.org/10.15378/1848-9540.2015.38.02
+Baumol, W. J. (1967). MacroEconomics of Unbalanced Growth-The Anatomy of Urban Cities. American Economic Review. 57.
+Castells, M. (2000). Uspon umreženog društva, Zagreb, Golden Marketing.
+Clark, C. (1957). The Conditions of Economic Progress, London, Macmilan.
+Dasgupta, Sukti; Singh, Ajit (2006). Manufacturing, Services and Premature Deindustrialization in Developing Countries: A Kaldorian Analysis. Research Paper 2006/49. Helsinki: UNU-WIDER.
+Elfring, T. (1988). Service Employment in Advanced Economies. A Comparative Analysis of Its Implications for Economic Growth. Groningen: Rijksuniversiteit Groningen.
+Felipe, J.; Mehta, A.; Rhee, C. (2014). “Manufacturing Matters... But It’s the Jobs that Count”, Asian Development Bank Economics Working Paper Series, (420), doi: 10.2139/ssrn.2558904.
+Fisher, I. (1939). Production, primary, secondary and tertiary, Economic Record 15, June, 24-38. 
+Francois, Joseph; Reinert, Kenneth. (1995). The Role of Services in the Structure of Production and Trade: Stylized Facts from a Cross-Country Analysis. Asia-Pacific, Economic Review. (2).
+Fuchs, V. R. (1968). The Service Economy, New York: National Bureau of Economic Research
+Gelo, T. i Družić, M. 2016. ‘Sektorska struktura gospodarstva Hrvatske’. U Gospodarstvo Hrvatske, A. Obadić i J. Tica (ur.). Zagreb: Ekonomski fakultet Sveučilišta u Zagrebu
+Hall, Peter A.; Soskice, David (2001). Varieties of Capitalism: The Institutional Foundations of Comparative Advantage. Oxford: Oxford University Press.
+Herrendorf, B.; Rogerson, R; Valentinyi, A. (2014). Growth and structural transformation. In: Aghion, P., Durlauf, S. N. (Eds.), Handbook of Economic Growth. Elsevier.
+Krüger, J. J. (2008). Productivity and structural change: a review of the literature. J. Econ. Surv. 22 (2), 330–363.
+Majetić, Filip (2015). Zagreb u postindustrijsko doba. Zagreb: Institut društvenih znanosti Ivo Pilar. 
+Matković, T. (2003). Restrukturiranje rada? Transformacija strukture zaposlenosti. Revija za socijalnu politiku, 10(2), 161-184. DOI: 10.3935/rsp.v10i2.125
+Nejašmić, I.; Toskić, A. (2013). Starenje stanovništva u Hrvatskoj – sadašnje stanje i perspektive. Hrvtaski geografski glasnik, 75 (1), 89 –110.
+Peračković, K. (2010). (Za)što raditi u postindustrijskom društvu? – Promjene u društvenoj podjeli rada na početku 21. stoljeća, Zagreb, Alinea i Institut društvenih znanosti «Ivo Pilar».
+Pilat , D.; Wölfl, A. (2005). Measuring the Interaction Between Manufacturing and Services. OECD, Paris (Working Paper, 2005/5).
+Pilat, Dirk & Woelfl, Anita. (2005). Measuring the Interaction Between Manufacturing and Services. SSRN Electronic Journal. 10.2139/ssrn.1690954. 
+Puljiz, V. (2000). Starenje stanovništva Europe. Dokumentacija. Revija za socijalnu politiku, 7 (1), 109-112. http://dx.doi.org/10.3935/rsp.v7i1.278
+Rodrik,Dani 2016. "Premature deindustrialization," Journal of Economic Growth, Springer, vol. 21(1), pages 1-33, March. 
+Rostow, W. W. (1997). The Stages of Economic Growth: A Non-Communist manifesto, Cambridge, University Press.
+Rowthorn, Robert and Coutts, Kenneth, (2004), De-industrialisation and the balance of payments in advanced economies, Cambridge Journal of Economics, 28, issue 5, p. 767-790.
+Schettkat, R. (2002). The Two Blades of the Scissors: The Interaction Between Demand and Supply in Market Economies. (Manuscript).
+Singelmann, J. (1978). From Agriculture to Services. The Transformation of Industrial Employment. Beverly Hills: Sage Publications.
+Summers, R. (1985). ‘Services in the International Economy’. In: Inman, R.P (ed.) Managing the Service Economy. Cambridge: CUP. pp. 27–48.
+Wertheimer-Baletić, A., 2017. Demografska teorija, razvoj stanovništva Hrvatske i populacijska politika (izabrana djela). Samobor: Meridijani.
+
